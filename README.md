@@ -2,7 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Primero Instalar:
+
+### `npm install @mui/material @emotion/react @emotion/styled`
+### `npm install @mui/icons-material`
 
 In the project directory, you can run:
 
