@@ -4,7 +4,7 @@ import GroupPage from "./pages/GroupPage";
 import ExpensesPage from "./pages/ExpensePage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-
+//Agrego un comentario de prueba
 
 function App() {
     return (
