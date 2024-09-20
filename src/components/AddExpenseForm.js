@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
 
-const ExpenseForm = ({ onAddExpense }) => {
+const AddExpenseForm = ({ onAddExpense }) => {
     const [amount, setAmount] = useState('');
     const [description, setDescription] = useState('');
     const [users, setUsers] = useState([]);
@@ -48,4 +48,4 @@ const ExpenseForm = ({ onAddExpense }) => {
     );
 };
 
-export default ExpenseForm;
+export default AddExpenseForm;

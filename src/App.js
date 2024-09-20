@@ -1,20 +1,23 @@
 import React from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Feature from './components/Feature';
+import Main from "./layouts/Main";
+import GroupPage from "./pages/GroupPage";
+import ExpensesPage from "./pages/ExpensePage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 
 
 function App() {
-    return (<div style={{backgroundColor: "#101010"}}>
-            {/* Header */}
-            <Navbar/>
-
-            {/* Hero Section */}
-            <Hero/>
-
-            {/* Feature Section */}
-            <Feature/>
-        </div>);
+    return (
+        <div className="App">
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Main />} />
+                    <Route path="/budget/:id" element={<GroupPage />} />
+                    <Route path="/expenses" element={<ExpensesPage />} />
+                </Routes>
+            </Router>
+        </div>
+    );
 }
 
 export default App;
