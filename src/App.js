@@ -3,8 +3,7 @@ import Main from "./layouts/Main";
 import GroupPage from "./pages/GroupPage";
 import ExpensesPage from "./pages/ExpensePage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-//Agrego un comentario de prueba
+import Dashboard from "./pages/Dashboard";
 
 function App() {
     return (
@@ -13,6 +12,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Main />} />
                     <Route path="/budget/:id" element={<GroupPage />} />
+                    <Route path="/home" element={<Dashboard />} />
                     <Route path="/expenses" element={<ExpensesPage />} />
                 </Routes>
             </Router>

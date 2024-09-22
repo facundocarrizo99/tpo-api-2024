@@ -45,7 +45,7 @@ export const createBudget = ({ name, amount }) => {
 };
 
 // create expense
-export const createExpense = ({ name, amount, budgetId }) => {
+export const createExpense = ({ name, amount, budgetId}) => {
     const newItem = {
         id: crypto.randomUUID(),
         name: name,
