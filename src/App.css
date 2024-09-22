@@ -30,9 +30,6 @@
   color: #61dafb;
 }
 
-
-
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -41,3 +38,15 @@
     transform: rotate(360deg);
   }
 }
+
+.feature{
+  margin-top: 200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 20rem));
+  gap: 2rem;
+  justify-content: space-evenly;
+}
+
+
+
+
