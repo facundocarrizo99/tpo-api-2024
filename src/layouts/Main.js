@@ -16,7 +16,7 @@ import img3 from '../assets/img3.jpg';
 
 export function mainLoader() {
     const userName = fetchData("userName");
-    return { userName }
+    return {userName}
 }
 
 function App() {

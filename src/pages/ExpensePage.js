@@ -1,6 +1,3 @@
-// rrd imports
-import { useLoaderData } from "react-router-dom";
-
 // library import
 import { toast } from "react-toastify";
 
@@ -8,13 +5,10 @@ import { toast } from "react-toastify";
 import Table from "../components/Table";
 
 // helpers
-import { deleteItem, fetchData } from "../helpers";
+import { deleteItem } from "../helpers";
 
-// loader
-export async function expensesLoader() {
-    const expenses = fetchData("expenses");
-    return { expenses };
-}
+import { useLoaderData } from "react-router-dom";
+
 
 // action
 export async function expensesAction({ request }) {
@@ -34,24 +28,24 @@ export async function expensesAction({ request }) {
     }
 }
 
-const ExpensesPage = () => {
+function ExpensesPage () {
     const { expenses } = useLoaderData();
 
     return (
         <div className="grid-lg">
-            <h1>All Expenses</h1>
+            <h1>Todos los grupos</h1>
             {expenses && expenses.length > 0 ? (
                 <div className="grid-md">
                     <h2>
-                        Recent Expenses <small>({expenses.length} total)</small>
+                        Grupos recientes <small>({expenses.length} total)</small>
                     </h2>
                     <Table expenses={expenses} />
                 </div>
             ) : (
-                <p>No Expenses to show</p>
+                <p>No tenes un grupo</p>
             )}
         </div>
     );
-};
+}
 
 export default ExpensesPage;
