@@ -1,57 +1,42 @@
-// rrd imports
-import { Link, useFetcher } from "react-router-dom";
+import * as React from 'react';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-// library import
-import DeleteIcon from '@mui/icons-material/Delete';
+function ExpenseItem({ expense }) {
+    if (!expense) return null; // Si no se pasa la propiedad 'expense', no renderizar nada.
 
-
-// helper imports
-import {
-    formatCurrency,
-    formatDateToLocaleString,
-    getAllMatchingItems,
-} from "../helpers";
-
-const ExpenseItem = ({ expense, showBudget }) => {
-    const fetcher = useFetcher();
-
-    const budget = getAllMatchingItems({
-        category: "budgets",
-        key: "id",
-        value: expense.budgetId,
-    })[0];
+    const { user, description, amount, date } = expense;
 
     return (
-        <>
-            <td>{expense.name}</td>
-            <td>{formatCurrency(expense.amount)}</td>
-            <td>{formatDateToLocaleString(expense.createdAt)}</td>
-            {showBudget && (
-                <td>
-                    <Link
-                        to={`/budget/${budget.id}`}
-                        style={{
-                            "--accent": budget.color,
-                        }}
-                    >
-                        {budget.name}
-                    </Link>
-                </td>
-            )}
-            <td>
-                <fetcher.Form method="post">
-                    <input type="hidden" name="_action" value="deleteExpense" />
-                    <input type="hidden" name="expenseId" value={expense.id} />
-                    <button
-                        type="submit"
-                        className="btn btn--warning"
-                        aria-label={`Delete ${expense.name} expense`}
-                    >
-                        <DeleteIcon width={20} />
-                    </button>
-                </fetcher.Form>
-            </td>
-        </>
+        <div>
+            <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                    <Avatar alt={user} src=<AccountCircleIcon/> />
+                </ListItemAvatar>
+                <ListItemText
+                    primary={user}
+                    secondary={
+                        <React.Fragment>
+                            <Typography
+                                component="span"
+                                variant="body2"
+                                sx={{ color: 'text.primary', display: 'inline' }}
+                            >
+                                {amount}
+                            </Typography>
+                            {description}, {date}
+                        </React.Fragment>
+                    }
+                />
+            </ListItem>
+            <Divider variant="inset" component="li" />
+        </div>
     );
-};
+}
+
 export default ExpenseItem;
