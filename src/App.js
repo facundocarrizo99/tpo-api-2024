@@ -13,7 +13,7 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/" element={<Main />} />
-                    <Route path="/budget/:id" element={<GroupPage />} />
+                    <Route path="/group/:groupName" element={<GroupPage />} />
                     <Route path="/home" element={<Dashboard />} />
                     <Route path="/expenses" element={<ExpensesPage />} />
                     <Route path="/Login" element={<Login/>} />

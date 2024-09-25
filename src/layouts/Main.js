@@ -2,7 +2,6 @@ import React from 'react';
 import '../App.css'
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
-import Feature from '../components/Feature';
 import Footer from '../components/Footer/Footer';
 import {fetchData} from "../helpers";
 import Card from '../components/Card/Card';
@@ -10,8 +9,6 @@ import Stats from '../components/Stats/Stats';
 import img1 from '../assets/img1.jpg';
 import img2 from '../assets/img2.jpg';
 import img3 from '../assets/img3.jpg';
-
-
 
 
 export function mainLoader() {
@@ -26,7 +23,7 @@ function App() {
         {/* Hero Section */}
         <Hero/>
         {/* Feature Section */}
-        <div className= "feature">
+        <div className="feature">
             <Card img={img1} title="Divide gastos" description="Calcula automáticamente quién debe cuánto en cualquier situación.
                                         Sube tus gastos para que los integrantes del grupo los vean.
                                         Elige qué tipo de división se hará para el monto final."/>
@@ -44,7 +41,7 @@ function App() {
 
         {/*Footer Section*/}
         <Footer/>
-        
+
     </div>);
 }
 

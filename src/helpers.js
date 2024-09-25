@@ -1,94 +1,48 @@
-export const waait = () =>
-    new Promise((res) => setTimeout(res, Math.random() * 800));
+const groups = [
+    {
+        name: 'grupo 1',
+        description: 'Descripción del grupo 1',
+        users: ['user1', 'user2'],
+        expenses: [
+            { user: 'user1', description: 'compra 1', amount: 100, date: '2023-01-01' },
+            { user: 'user2', description: 'compra 2', amount: 200, date: '2023-01-02' },
+        ],
+    },
+    {
+        name: 'grupo 2',
+        description: 'Descripción del grupo 2',
+        users: ['user3', 'user4'],
+        expenses: [
+            { user: 'user3', description: 'compra 3', amount: 300, date: '2023-02-01' },
+            { user: 'user4', description: 'compra 4', amount: 400, date: '2023-02-02' },
+        ],
+    },
+    {
+        name: 'grupo 3',
+        description: 'Descripción del grupo 3',
+        users: ['user5', 'user6'],
+        expenses: [
+            { user: 'user5', description: 'compra 5', amount: 500, date: '2023-03-01' },
+            { user: 'user6', description: 'compra 6', amount: 600, date: '2023-03-02' },
+        ],
+    },
+    // Agrega más grupos y expensas según sea necesario
+];
 
-// colors
-const generateRandomColor = () => {
-    const existingBudgetLength = fetchData("budgets")?.length ?? 0;
-    return `${existingBudgetLength * 34} 65% 50%`;
-};
+function findGroupByName(groupName) {
+    return groups.find(group => group.name === groupName);
+}
 
-// Local storage
-export const fetchData = (key) => {
-    return JSON.parse(localStorage.getItem(key));
-};
+function fetchData() {
+    // Implementa la lógica para obtener los datos
+    return groups;
+}
 
-// Get all items from local storage
-export const getAllMatchingItems = ({ category, key, value }) => {
-    const data = fetchData(category) ?? [];
-    return data.filter((item) => item[key] === value);
-};
-
-// delete item from local storage
-export const deleteItem = ({ key, id }) => {
-    const existingData = fetchData(key);
-    if (id) {
-        const newData = existingData.filter((item) => item.id !== id);
-        return localStorage.setItem(key, JSON.stringify(newData));
+function deleteItem(groupName, expenseIndex) {
+    const group = findGroupByName(groupName);
+    if (group) {
+        group.expenses.splice(expenseIndex, 1);
     }
-    return localStorage.removeItem(key);
-};
+}
 
-// create budget
-export const createBudget = ({ name, amount }) => {
-    const newItem = {
-        id: crypto.randomUUID(),
-        name: name,
-        createdAt: Date.now(),
-        amount: +amount,
-        color: generateRandomColor(),
-    };
-    const existingBudgets = fetchData("budgets") ?? [];
-    return localStorage.setItem(
-        "budgets",
-        JSON.stringify([...existingBudgets, newItem])
-    );
-};
-
-// create expense
-export const createExpense = ({ name, amount, budgetId}) => {
-    const newItem = {
-        id: crypto.randomUUID(),
-        name: name,
-        createdAt: Date.now(),
-        amount: +amount,
-        budgetId: budgetId,
-    };
-    const existingExpenses = fetchData("expenses") ?? [];
-    return localStorage.setItem(
-        "expenses",
-        JSON.stringify([...existingExpenses, newItem])
-    );
-};
-
-// total spent by budget
-export const calculateSpentByBudget = (budgetId) => {
-    const expenses = fetchData("expenses") ?? [];
-    const budgetSpent = expenses.reduce((acc, expense) => {
-        // check if expense.id === budgetId I passed in
-        if (expense.budgetId !== budgetId) return acc;
-
-        // add the current amount to my total
-        return (acc += expense.amount);
-    }, 0);
-    return budgetSpent;
-};
-
-// FORMATTING
-export const formatDateToLocaleString = (epoch) =>
-    new Date(epoch).toLocaleDateString();
-
-// Formating percentages
-export const formatPercentage = (amt) => {
-    return amt.toLocaleString(undefined, {
-        style: "percent",
-        minimumFractionDigits: 0,
-    });
-};
-
-// Format currency
-export const formatCurrency = (amt) => {
-    return amt.toLocaleString(undefined, {
-        style: "currency",
-        currency: "USD",
-    });
-};
+export { groups, findGroupByName, fetchData, deleteItem };

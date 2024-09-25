@@ -1,41 +1,35 @@
-// rrd imports
-import { Form, Link } from "react-router-dom";
+import {Button, Card, CardActionArea, CardContent, Typography} from "@mui/material";
 
-// library imports
-import DeleteIcon from '@mui/icons-material/Delete';
-import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
+import React from "react";
 
-// helper functions
-import {
-    calculateSpentByBudget,
-    formatCurrency,
-    formatPercentage,
-} from "../helpers";
 
-const BudgetItem = ({ budget, showDelete = false }) => {
-    const { id, name, amount, color } = budget;
-    const spent = calculateSpentByBudget(id);
+const GrouopItem = ({budget, showDelete = false}) => {
+    const {name, description, users, expenses} = budget;
 
     return (
-        <div
-            className="budget"
-            style={{
-                "--accent": color,
-            }}
-        >
-            <div className="progress-text">
-                <h3>{name}</h3>
-                <p>{formatCurrency(amount)} Budgeted</p>
-            </div>
-            <progress max={amount} value={spent}>
-                {formatPercentage(spent / amount)}
-            </progress>
-            <div className="progress-text">
-                <small>{formatCurrency(spent)} spent</small>
-                <small>{formatCurrency(amount - spent)} remaining</small>
-            </div>
-
-        </div>
+        <Card sx={{ maxWidth: 345 }}>
+            <CardActionArea>
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                        {name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {description}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {users.length} members
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {expenses.length} expenses
+                    </Typography>
+                    {showDelete && (
+                        <Button variant="contained" color="error">
+                            Delete
+                        </Button>
+                    )}
+                </CardContent>
+            </CardActionArea>
+        </Card>
     );
 };
-export default BudgetItem;
+export default GrouopItem;

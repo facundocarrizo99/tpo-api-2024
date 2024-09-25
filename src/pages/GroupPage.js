@@ -1,95 +1,44 @@
-// rrd imports
-import { useLoaderData } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
+import {Box, Button, Container, List, ListItem, ListItemText, Typography} from "@mui/material";
+import ResponsiveAppBar from "../components/ResponsiveAppBar";
+import Footer from "../components/Footer/Footer";
+import React from "react";
+import {BasicSpeedDial} from "../components/BasicSpeedDial";
+import ExpenseItem from "../components/ExpenseItem";
+import {findGroupByName} from "../helpers";
 
-// library
-import { toast } from "react-toastify";
 
-// components
-import AddExpenseForm from "../components/AddExpenseForm";
-import GroupItem from "../components/GroupItem";
-import Table from "../components/Table";
-
-// helpers
-import { createExpense, deleteItem, getAllMatchingItems } from "../helpers";
-
-// loader
-export async function budgetLoader({ params }) {
-    const budget = await getAllMatchingItems({
-        category: "budgets",
-        key: "id",
-        value: params.id,
-    })[0];
-
-    const expenses = await getAllMatchingItems({
-        category: "expenses",
-        key: "budgetId",
-        value: params.id,
-    });
-
-    if (!budget) {
-        throw new Error("The budget you’re trying to find doesn’t exist");
-    }
-
-    return { budget, expenses };
-}
-
-// action
-export async function budgetAction({ request }) {
-    const data = await request.formData();
-    const { _action, ...values } = Object.fromEntries(data);
-
-    if (_action === "createExpense") {
-        try {
-            createExpense({
-                name: values.newExpense,
-                amount: values.newExpenseAmount,
-                budgetId: values.newExpenseBudget,
-            });
-            return toast.success(`Expense ${values.newExpense} created!`);
-        } catch (e) {
-            throw new Error("There was a problem creating your expense.");
-        }
-    }
-
-    if (_action === "deleteExpense") {
-        try {
-            deleteItem({
-                key: "expenses",
-                id: values.expenseId,
-            });
-            return toast.success("Expense deleted!");
-        } catch (e) {
-            throw new Error("There was a problem deleting your expense.");
-        }
-    }
-}
-
-const GroupPage = () => {
-    const { budget, expenses } = useLoaderData();
+function GroupPage() {
+    const {groupName} = useParams(); // Captura el parámetro de la URL
+    const group = findGroupByName(groupName);
+    const {expenses} = group.expenses;
 
     return (
-        <div
-            className="grid-lg"
-            style={{
-                "--accent": budget.color,
-            }}
-        >
-            <h1 className="h2">
-                <span className="accent">{budget.name}</span> Overview
-            </h1>
-            <div className="flex-lg">
-                <GroupItem budget={budget} showDelete={true} />
-                <AddExpenseForm budgets={[budget]} />
-            </div>
-            {expenses && expenses.length > 0 && (
-                <div className="grid-md">
-                    <h2>
-                        <span className="accent">{budget.name}</span> Expenses
-                    </h2>
-                    <Table expenses={expenses} showBudget={false} />
-                </div>
-            )}
+        <div style={{backgroundColor: "#101010"}}>
+            <ResponsiveAppBar/>
+            <Container maxWidth="xl">
+                <Typography variant="h4">Grupo: {groupName}</Typography>
+                {expenses && expenses.length > 0 ? (
+                    <Container maxWidth="xl">
+                        <List>
+                            {expenses.map((expense) => (
+                                <ExpenseItem expense={expense}/>
+                            ))}
+                        </List>
+                    </Container>
+                ) : (
+                    <Container maxWidth="md" style={{textAlign: 'center', marginTop: '200px'}}>
+                        <Typography variant="h6" color="#F8F8F8">
+                            Esto está un poco vacío.
+                            Apreta el botón de abajo y carga el primer gasto del grupo.
+                        </Typography>
+                    </Container>
+                )}
+                <BasicSpeedDial/>
+            </Container>
+            <Footer/>
         </div>
-    );
-};
+    )
+}
+
 export default GroupPage;
