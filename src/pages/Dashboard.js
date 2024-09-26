@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid2';
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import Modal from "@mui/material/Modal";
 import {Link} from "react-router-dom";
-import {fetchData } from '../helpers';
+import {fetchData } from '../GroupBackend';
 
 
 function Dashboard() {
@@ -22,9 +22,9 @@ function Dashboard() {
         <div style={{backgroundColor: "#101010"}}>
             <ResponsiveAppBar/>
             <Container maxWidth="xl">
+                <Typography variant="h3" color="#F8F8F8">Existing Groups</Typography>
                 {budgets && budgets.length > 0 ? (
                     <Container maxWidth="xl">
-                        <Typography variant="h3" color="#F8F8F8">Existing Budgets</Typography>
                         <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
                             {budgets.map((budget) => (
                                 <Grid key={budget.name} size={{xs: 2, sm: 4, md: 4}}>
