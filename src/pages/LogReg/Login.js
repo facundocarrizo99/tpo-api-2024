@@ -2,46 +2,56 @@ import React, {useState} from 'react'
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import '../LogReg/LogReg.css'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import EmailIcon from '@mui/icons-material/Email';
 import HttpsIcon from '@mui/icons-material/Https';
+import {users, findUser } from '../../backendLog';
+import {useNavigate} from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ searchUser}) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const [action,setaction] = useState("Ingresar");
+
+  const handleSubmit = (e) => {
+      e.preventDefault();
+      const user = findUser(users, username);
+      console.log("Usuario buscado:", user);
+      if (user && user.password === password) {
+        navigate('/Home');
+      } else {
+        alert("Usuario o contraseña incorrectos.");
+      }
+  };
+  
 
   return (
-    <div className= "container">
+    <form onSubmit={handleSubmit} className= "container">
 
       <div className= "header">
         <div className= "text-arreglemos">Arreglemos<AssuredWorkloadIcon className= "Logo" style={{color: "#101010"}}/></div>
-        <div className= "text-interactivo">{action}</div>
+        <div className= "text-interactivo">Ingresar</div>
         <div className= "underline"></div>
       </div>
       
       <div className= "inputs">
-        {action==="Ingresar"?<div></div>:<div className= "input">
-          <AccountCircleIcon className= "Logo" style={{color: "#656565"}}/>
-          <input type= "text" placeholder= "Nombre de Usuario"/>
-        </div>}
-        
         <div className= "input">
-          <EmailIcon className= "Logo" style={{color: "#656565"}}/>
-          <input type= "email" placeholder= "Mail"/>
+          <AccountCircleIcon className= "Logo" style={{color: "#656565"}}/>
+          <input type= "text" placeholder= "Nombre de Usuario" value={username} onChange={(e) => setUsername(e.target.value)} required/>
         </div>
 
         <div className= "input">
           <HttpsIcon className= "Logo" style={{color: "#656565"}}/>
-          <input type= "password" placeholder= "Contraseña"/>
+          <input type= "password" placeholder= "Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required/>
         </div>
 
       </div>
-      {action==="Registrarse"?<div></div>:<div className= "forgot-password">Perdiste tu contraseña? <span>Hace click aqui!</span></div>}
+      <div className= "forgot-password">Perdiste tu contraseña? <span>Hace click aqui!</span></div>
       <div className= "submit-container">
-        <div className={action==="Ingresar"?"submit gray":"submit"} onClick={()=>{setaction("Registrarse")}}>Registrarse</div>
-        <div className={action==="Registrarse"?"submit gray":"submit"} onClick={()=>{setaction("Ingresar")}}>Ingresar</div>
+        <div className="submit gray"  onClick={() => navigate('/Register')}>Registrarse</div>
+        <div className="submit" onClick={handleSubmit} >Ingresar</div>
       </div>
 
-    </div>
+    </form>
   )
 }
 

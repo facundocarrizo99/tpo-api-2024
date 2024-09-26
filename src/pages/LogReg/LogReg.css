@@ -101,6 +101,11 @@ body{
     font-size: 18px;
     font-weight: 650;
     cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.submit:hover {
+    transform: scale(1.1); 
 }
 
 .gray{
