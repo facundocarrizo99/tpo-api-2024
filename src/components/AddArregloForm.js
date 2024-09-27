@@ -1,32 +1,35 @@
-import React, { useState } from 'react';
-import {TextField, Button, Typography, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
-import {addExpense} from "../GroupBackend";
+import React, {useState} from "react";
+import {Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
+import {addArreglo} from "../GroupBackend";
 
-function AddExpenseForm({users}, {selectedGroup}) {
-    const [formExpenseValues, setFormExpenseValues] = useState({
+function ArregloForm({users}, {selectedGroup}) {
+    const [formArregloValues, setFormArregloValues] = useState({
         groupName: '',
         payer: [],
+        receiver: [],
         description: '',
         amount: 0,
     });
 
     const handleChange = (e) => {
         const {name, value} = e.target;
-        setFormExpenseValues({
-            ...formExpenseValues,
+        setFormArregloValues({
+            ...formArregloValues,
             [name]: value,
         });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        addExpense(selectedGroup, formExpenseValues);
-        console.log('Arreglo created:', formExpenseValues);
+        addArreglo(selectedGroup, formArregloValues);
+        console.log('Arreglo created:', formArregloValues);
     };
 
+
     return (
-        <form
-            style={{
+        <Box
+            component="form"
+            sx={{
                 '& .MuiTextField-root': {m: 1, width: '100%'},
                 maxWidth: 500,
                 margin: '0 auto',
@@ -39,13 +42,13 @@ function AddExpenseForm({users}, {selectedGroup}) {
             onSubmit={handleSubmit}
         >
             <Typography variant="h5" component="h1" gutterBottom>
-                Create New Gasto
+                Create New Arreglo
             </Typography>
             <TextField
                 label="Description"
                 variant="outlined"
                 name="description"
-                value={formExpenseValues.description}
+                value={formArregloValues.description}
                 onChange={handleChange}
                 multiline
                 rows={2}
@@ -55,7 +58,7 @@ function AddExpenseForm({users}, {selectedGroup}) {
                 label="amount"
                 variant="outlined"
                 name="amount"
-                value={formExpenseValues.amount}
+                value={formArregloValues.amount}
                 onChange={handleChange}
                 required
             />
@@ -65,7 +68,25 @@ function AddExpenseForm({users}, {selectedGroup}) {
                     labelId="payer-select-label"
                     id="payer"
                     name="payer"
-                    value={formExpenseValues.payer}
+                    single
+                    value={formArregloValues.payer}
+                    onChange={handleChange}
+                >
+                    {users.map((user) => (
+                        <MenuItem key={user.id} value={user.name}>
+                            {user.name}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+                <InputLabel id="receiver-select-label">Receiver</InputLabel>
+                <Select
+                    labelId="receiver-select-label"
+                    id="receiver"
+                    name="Receiver"
+                    sinlge
+                    value={formArregloValues.receiver}
                     onChange={handleChange}
                 >
                     {users.map((user) => (
@@ -81,12 +102,11 @@ function AddExpenseForm({users}, {selectedGroup}) {
                 variant="contained"
                 color="primary"
                 sx={{mt: 2}}
-                onClick={handleSubmit}
             >
-                Create Gasto
+                Create Arreglo
             </Button>
-        </form>
+        </Box>
     );
 }
 
-export default AddExpenseForm;
+export default ArregloForm;
