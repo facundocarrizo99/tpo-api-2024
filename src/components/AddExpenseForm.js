@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {TextField, Button, Box, Typography, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
+import {TextField, Button, Typography, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
 import {addExpense} from "../GroupBackend";
 
 function AddExpenseForm({users}, {selectedGroup}) {
@@ -25,9 +25,8 @@ function AddExpenseForm({users}, {selectedGroup}) {
     };
 
     return (
-        <Box
-            component="form"
-            sx={{
+        <form
+            style={{
                 '& .MuiTextField-root': {m: 1, width: '100%'},
                 maxWidth: 500,
                 margin: '0 auto',
@@ -40,7 +39,7 @@ function AddExpenseForm({users}, {selectedGroup}) {
             onSubmit={handleSubmit}
         >
             <Typography variant="h5" component="h1" gutterBottom>
-                Create New Arreglo
+                Create New Gasto
             </Typography>
             <TextField
                 label="Description"
@@ -66,7 +65,6 @@ function AddExpenseForm({users}, {selectedGroup}) {
                     labelId="payer-select-label"
                     id="payer"
                     name="payer"
-                    single
                     value={formExpenseValues.payer}
                     onChange={handleChange}
                 >
@@ -87,8 +85,8 @@ function AddExpenseForm({users}, {selectedGroup}) {
             >
                 Create Gasto
             </Button>
-        </Box>
+        </form>
     );
-};
+}
 
 export default AddExpenseForm;
