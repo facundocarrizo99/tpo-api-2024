@@ -1,7 +1,7 @@
 var groups = [
     {
-        name: 'grupo 1',
-        description: 'Descripción del grupo 1',
+        name: 'Asado',
+        description: 'Asado para el cumpleaños de Santiago',
         users: [{id: 1, name: 'Santiago'}, {id: 2, name: 'Facundo'}],
         expenses: [
             { id: 1, user: 'Santiago', description: 'Carne', amount: 100, date: '2023-01-01' },
@@ -14,7 +14,7 @@ var groups = [
     {
         name: 'grupo 2',
         description: 'Descripción del grupo 2',
-        users: [{id: 3, name: 'user3'}, {id: 4, name: 'user4'}],
+        users: [{id: 3, name: 'user3'}, {id: 4, name: 'user4'}, {id: 1, name: 'Santiago'}],
         expenses: [
             { id: 1, user: 'user3', description: 'compra 3', amount: 300, date: '2023-02-01' },
             { id: 2, user: 'user4', description: 'compra 4', amount: 400, date: '2023-02-02' },

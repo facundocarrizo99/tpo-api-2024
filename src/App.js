@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Register from './pages/LogReg/Register';
 import Dashboard from "./pages/Dashboard";
 
+//todo home tiene que tener un usuario logueado que muestra sus grupos /home/:userId
+
 function App() {
     return (
         <div className="App">

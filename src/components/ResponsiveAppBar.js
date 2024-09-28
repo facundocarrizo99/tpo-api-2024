@@ -117,7 +117,7 @@ export default function PrimarySearchAppBar() {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem onClick={handleProfileMenuOpen}>
+            <MenuItem onClick={handleProfileMenuOpen} color="#F8F8F8">
                 <IconButton
                     size="large"
                     aria-label="account of current user"

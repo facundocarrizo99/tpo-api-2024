@@ -16,10 +16,14 @@ const Login = ({ searchUser}) => {
       e.preventDefault();
       const user = findUser(users, username);
       console.log("Usuario buscado:", user);
-      if (user && user.password === password) {
-        navigate('/Home');
+      if (user) {
+          if (user.password === password) {
+              navigate('/Home');
+          } else {
+              alert("Contraseña incorrecta.");
+          }
       } else {
-        alert("Usuario o contraseña incorrectos.");
+          alert("Usuario no encontrado.");
       }
   };
   
