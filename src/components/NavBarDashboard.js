@@ -7,7 +7,7 @@ function NavBarDashboard  ({onProfileClick}) {
 
     const navigate = useNavigate();
     const handleLanding = () => {
-        navigate('/Landing');
+        navigate('/');
     }
     const handleLogin = () => {
       navigate('/Login');
