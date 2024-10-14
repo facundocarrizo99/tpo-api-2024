@@ -1,5 +1,5 @@
 import React from 'react'
-import {Container, Card, CardContent, Typography, } from '@mui/material';
+import {Container, Card, CardContent, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 function Feature() {

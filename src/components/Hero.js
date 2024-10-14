@@ -36,7 +36,6 @@ function Hero() {
                     Registrarse
                 </Button>
             </div>
-
         </Container>
     )
 }
