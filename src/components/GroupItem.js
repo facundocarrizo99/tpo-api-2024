@@ -13,7 +13,7 @@ const GrouopItem = ({budget, showDelete = false}) => {
                     <Typography gutterBottom variant="h5" component="div">
                         {name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="subtitle1" color="text.secondary">
                         {description}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">

@@ -49,6 +49,7 @@ function Dashboard() {
             <NavBarDashboard profileImage={profileImage} onProfileClick={handleOpenProfileModal}/>
 
             <Container maxWidth="xl">
+                <Typography variant="h3" color="#F8F8F8">Existing Groups</Typography>
                 {budgets && budgets.length > 0 ? (
                     <Container maxWidth="xl">
                         <Typography variant="h4" color="#F8F8F8" marginTop={5}>Desde esta ventana puedes gestionar tus Grupos!</Typography>

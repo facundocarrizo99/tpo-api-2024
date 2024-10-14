@@ -1,48 +1,36 @@
-import React, {useState} from 'react';
-import {TextField, Button, Typography, FormControl, InputLabel, Select, MenuItem, List, Box} from '@mui/material';
-import {addExpense} from "../GroupBackend";
-import * as PropTypes from "prop-types";
+import React, {useState} from "react";
+import {Box, Button, FormControl, InputLabel, List, MenuItem, Select, TextField, Typography} from "@mui/material";
+import {addArreglo} from "../GroupBackend";
 import ListItem from "@mui/material/ListItem";
 
-function CloudUploadIcon() {
-    return null;
-}
-
-function VisuallyHiddenInput(props) {
-    return null;
-}
-
-VisuallyHiddenInput.propTypes = {
-    type: PropTypes.string,
-    onChange: PropTypes.func,
-    multiple: PropTypes.bool
-};
-
-function AddExpenseForm({users}, {selectedGroup}) {
-    const [formExpenseValues, setFormExpenseValues] = useState({
+function ArregloForm({users}, {selectedGroup}) {
+    const [formArregloValues, setFormArregloValues] = useState({
         groupName: '',
         payer: [],
+        receiver: [],
         description: '',
         amount: 0,
     });
 
     const handleChange = (e) => {
         const {name, value} = e.target;
-        setFormExpenseValues({
-            ...formExpenseValues,
+        setFormArregloValues({
+            ...formArregloValues,
             [name]: value,
         });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        addExpense(selectedGroup, formExpenseValues);
-        console.log('Arreglo created:', formExpenseValues);
+        addArreglo(selectedGroup, formArregloValues);
+        console.log('Arreglo created:', formArregloValues);
     };
+
 
     return (
         <Box
-            style={{
+            component="form"
+            sx={{
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
@@ -58,43 +46,42 @@ function AddExpenseForm({users}, {selectedGroup}) {
             onSubmit={handleSubmit}
         >
             <Typography variant="h5" component="h1" gutterBottom align={"center"}>
-                Crear nuevo Gasto
+                Crear nuevo Arreglo
             </Typography>
-            <List sx={{ width: '100%', maxWidth: 360 }}>
-                <ListItem sx={{ width: '100%', maxWidth: 360 }}>
+            <List sx={{width: '100%', maxWidth: 360}}>
+                <ListItem >
                     <TextField
                         label="Description"
                         variant="outlined"
                         name="descripcion"
                         fullWidth={true}
-                        value={formExpenseValues.description}
+                        value={formArregloValues.description}
                         onChange={handleChange}
                         multiline
                         rows={2}
                         required
                     />
                 </ListItem>
-                <ListItem>
+                <ListItem >
                     <TextField
                         label="amount"
                         variant="outlined"
-                        name="amount"
+                        name="monto"
                         fullWidth={true}
-                        value={formExpenseValues.amount}
+                        value={formArregloValues.amount}
                         onChange={handleChange}
                         required
                     />
                 </ListItem>
-
-                <ListItem>
+                <ListItem sx={{width: '100%', maxWidth: 360}}>
                     <FormControl fullWidth margin="normal">
                         <InputLabel id="payer-select-label">Payer</InputLabel>
                         <Select
                             labelId="payer-select-label"
                             id="payer"
-                            name="Quien pago?"
-                            fullWidth={true}
-                            value={formExpenseValues.payer}
+                            name="Quien Paga?"
+                            single
+                            value={formArregloValues.payer}
                             onChange={handleChange}
                         >
                             {users.map((user) => (
@@ -105,35 +92,36 @@ function AddExpenseForm({users}, {selectedGroup}) {
                         </Select>
                     </FormControl>
                 </ListItem>
-                <Button
-                    component="label"
-                    role={undefined}
-                    variant="contained"
-                    tabIndex={-1}
-                    startIcon={<CloudUploadIcon/>}
-                >
-                    Upload files
-                    <VisuallyHiddenInput
-                        type="file"
-                        onChange={(event) => console.log(event.target.files)}
-                        multiple
-                    />
-                </Button>
+                <ListItem sx={{width: '100%', maxWidth: 360}}>
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel id="receiver-select-label">Receiver</InputLabel>
+                        <Select
+                            labelId="receiver-select-label"
+                            id="receiver"
+                            name="Quien recibe?"
+                            sinlge
+                            value={formArregloValues.receiver}
+                            onChange={handleChange}
+                        >
+                            {users.map((user) => (
+                                <MenuItem key={user.id} value={user.name}>
+                                    {user.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </ListItem>
             </List>
-
-
             <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 sx={{mt: 2}}
-                onClick={handleSubmit}
             >
-                Create Gasto
+                Create Arreglo
             </Button>
         </Box>
-    )
-        ;
+    );
 }
 
-export default AddExpenseForm;
+export default ArregloForm;

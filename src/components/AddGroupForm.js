@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {TextField, Button, Box, Typography, MenuItem, Select, InputLabel, FormControl} from '@mui/material';
+import {addGroup} from "../GroupBackend";
 
 function GroupForm() {
     const [formValues, setFormValues] = useState({
@@ -18,13 +19,13 @@ function GroupForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission logic
+        addGroup(formValues);
         console.log('Group created:', formValues);
     };
 
     const usersList = [
-        {id: 1, name: 'User 1'},
-        {id: 2, name: 'User 2'},
+        {id: 1, name: 'Santiago'},
+        {id: 2, name: 'Facundo'},
         {id: 3, name: 'User 3'},
         {id: 4, name: 'User 4'}
     ];
@@ -49,7 +50,6 @@ function GroupForm() {
                 Create New Group
             </Typography>
 
-            {/* Group Name */}
             <TextField
                 label="Group Name"
                 variant="outlined"
@@ -59,7 +59,6 @@ function GroupForm() {
                 required
             />
 
-            {/* Description */}
             <TextField
                 label="Description"
                 variant="outlined"
@@ -71,7 +70,6 @@ function GroupForm() {
                 required
             />
 
-            {/* Users (multi-select) */}
             <FormControl fullWidth margin="normal">
                 <InputLabel id="users-label">Users</InputLabel>
                 <Select
@@ -91,7 +89,6 @@ function GroupForm() {
                 </Select>
             </FormControl>
 
-            {/* Submit Button */}
             <Button
                 type="submit"
                 variant="contained"

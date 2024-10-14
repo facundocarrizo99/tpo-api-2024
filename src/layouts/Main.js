@@ -3,7 +3,7 @@ import '../App.css'
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import Footer from '../components/Footer/Footer';
-import {fetchData} from "../helpers";
+import {fetchData} from "../GroupBackend";
 import Card from '../components/Card/Card';
 import Stats from '../components/Stats/Stats';
 import img1 from '../assets/img1.jpg';
