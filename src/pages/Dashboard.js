@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid2';
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import Modal from "@mui/material/Modal";
 import {Link} from "react-router-dom";
-import {fetchData } from '../helpers';
+import {fetchData } from '../GroupBackend';
 import NavBarDashboard from "../components/NavBarDashboard";
 import ModificarPerfil from "../components/ModificarPerfil";
 
@@ -16,14 +16,14 @@ import ModificarPerfil from "../components/ModificarPerfil";
 function Dashboard() {
     const userName = "Facundo"; // Nombre del usuario, puedes reemplazarlo por uno dinámico si lo prefieres
     const [budgets, setBudgets] = React.useState([]); // Estado para almacenar los presupuestos o grupos de gastos
-    const [open, setOpen] = React.useState(false); // Estado para manejar el modal
+    const [openNewGroup, setOpen] = React.useState(false); // Estado para manejar el modal del grupo
     const [openProfileModal, setOpenProfileModal] = useState(false); // Estado para manejar el modal de perfil
-    const [profileImage, setProfileImage] = useState(''); // Estado para almacenar la imagen de perfil
+
 
     // Función para abrir el modal
-    const handleOpen = () => setOpen(true);
+    const handleNewGroupOpen = () => setOpen(true);
     // Función para cerrar el modal
-    const handleClose = () => setOpen(false);
+    const handleNewGroupClose = () => setOpen(false);
 
     // Función para abrir el modal
     const handleOpenProfileModal = () => setOpenProfileModal(true);
@@ -46,16 +46,16 @@ function Dashboard() {
     return (
         <div style={{backgroundColor: "#101010", minHeight: "100vh", display: "flex", flexDirection:"column"}}>
         
-            <NavBarDashboard profileImage={profileImage} onProfileClick={handleOpenProfileModal}/>
+            <NavBarDashboard onProfileClick={handleOpenProfileModal}/>
 
             <Container maxWidth="xl">
-                <Typography variant="h3" color="#F8F8F8">Existing Groups</Typography>
+                <Typography variant="h3" color="#F8F8F8">Mis Grupos</Typography>
                 {budgets && budgets.length > 0 ? (
                     <Container maxWidth="xl">
-                        <Typography variant="h4" color="#F8F8F8" marginTop={5}>Desde esta ventana puedes gestionar tus Grupos!</Typography>
+                        <Typography variant="h4" color="#F8F8F8" marginTop={5} marginBottom={5}>Desde esta ventana puedes gestionar tus Grupos!</Typography>
                         <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
                             {budgets.map((budget) => (
-                                <Grid key={budget.name} size={{xs: 2, sm: 4, md: 4}}>
+                                <Grid key={budget.name} size={{xs: 2, sm: 4, md: 4}} sx={{transition: 'transform 0.3s ease', '&:hover': {transform: 'scale(1.05)',  },}}>
                                     {/* Envolver GroupItem en un enlace que redirige a la página del grupo */}
                                     <Link to={`/group/${budget.name}`} style={{textDecoration: 'none'}}>
                                         <GroupItem budget={budget}/>
@@ -76,18 +76,13 @@ function Dashboard() {
                     </Container>
                 )}
                 <Box sx={{marginTop:5, marginLeft: 100, textAlign: "center"}}>
-                    <Button variant="contained" endIcon={<AssuredWorkloadIcon/>}
-                            onClick={handleOpen}>
+                    <Button variant="contained" color="success" endIcon={<AssuredWorkloadIcon/>}
+                            onClick={handleNewGroupOpen} sx={{color: "white", '&:hover': { transform: 'scale(1.1)', }}}>
                         Crear Grupo
                     </Button>
                 </Box>
-                    <Modal
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <AddGroupForm/>
+                    <Modal open={openNewGroup} onClose={handleNewGroupClose}>
+                        <AddGroupForm open={openNewGroup} onClose={handleNewGroupClose}/>
                     </Modal>
 
                     <Modal open={openProfileModal} onClose={handleCloseProfileModal}>

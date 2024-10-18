@@ -135,7 +135,7 @@ function ModificarPerfil({open, onClose, userData}) {
                         onClick={onClose} 
                         variant="contained" 
                         color="success" 
-                        sx={{ flex: 1, marginRight: 1 , 
+                        sx={{ mt: 2, marginRight: 1 , 
                         '&:hover': {
                                     transform: 'scale(1.1)', // Efecto de zoom al pasar el cursor
                                 }}}
@@ -147,7 +147,8 @@ function ModificarPerfil({open, onClose, userData}) {
                     <Button 
                         onClick={handleDeleteProfile} 
                         variant="contained"  
-                        sx={{ flex: 1, marginRight: 1 , backgroundColor: "#CC0F0F", color: "white",
+                        color="error"
+                        sx={{ mt: 2, marginRight: 1 , color: "white",
                         '&:hover': {
                                     transform: 'scale(1.1)', // Efecto de zoom al pasar el cursor
                                 }}}
@@ -159,8 +160,8 @@ function ModificarPerfil({open, onClose, userData}) {
                     <Button 
                         onClick={onClose} 
                         variant="contained" 
-                        color="error" 
-                        sx={{ flex: 1, marginRight: 1, backgroundColor: "#CC0F0F", color: "white",
+                        color="error"
+                        sx={{ mt: 2, marginRight: 1, color: "white",
                         '&:hover': {
                                     transform: 'scale(1.1)', // Efecto de zoom al pasar el cursor
                                 }}}

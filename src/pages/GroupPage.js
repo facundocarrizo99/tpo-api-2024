@@ -1,17 +1,24 @@
 import {useParams} from "react-router-dom";
-import {Container, List, Typography} from "@mui/material";
+import {Container, List, Typography, Button, Box} from "@mui/material";
 import ResponsiveAppBar from "../components/ResponsiveAppBar";
 import Footer from "../components/Footer/Footer";
 import React from "react";
 import {BasicSpeedDial} from "../components/BasicSpeedDial";
 import ExpenseItem from "../components/ExpenseItem";
 import {findGroupByName} from "../GroupBackend";
+import {useNavigate} from 'react-router-dom';
 
 
 function GroupPage() {
     const {groupName} = useParams(); // Captura el parámetro de la URL
     const group = findGroupByName(groupName);
     const expenses = group ? group.expenses : [];
+    const navigate = useNavigate();
+
+    const handleBackToGroups = () => {
+        navigate('/home'); // Cambia la ruta a donde necesites redirigir
+    };
+
 
     return (
         <div style={{backgroundColor: "#101010"}}>
@@ -34,8 +41,9 @@ function GroupPage() {
                         </Typography>
                     </Container>
                 )}
-                <BasicSpeedDial/>
-            </Container>
+                    <BasicSpeedDial/>
+                    <Button variant="contained" color="error" onClick={handleBackToGroups} sx={{color: "white", '&:hover': { transform: 'scale(1.1)', }}}>Volver a tus Grupos</Button>
+                </Container>
             <Footer/>
         </div>
     )
