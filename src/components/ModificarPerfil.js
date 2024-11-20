@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Button, Avatar, MenuItem } from '@mui/material';
-import imgPerfil from '/Users/Santiago/tpo-api-2024/src/assets/perfil.png'
+import imgPerfil from '/Users/Santiago/Desktop/API/tpo-api-2024/src/assets/perfil.png'
+//import axios from 'axios';  // Asegúrate de tener axios instalado
 
 //Falta agregar que la imagen de perfil se pasa como prop para que el nav bar la tenga//
 
@@ -13,6 +14,7 @@ function ModificarPerfil({open, onClose, userData}) {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [profileImage, setProfileImage] = useState(null);
 
     // Efecto para cargar los datos del usuario cuando se abre el modal
     useEffect(() => {
@@ -36,13 +38,44 @@ function ModificarPerfil({open, onClose, userData}) {
         }
     };
 
-    const handleDeleteProfile = () => {
-        if (window.confirm("¿Estás seguro de que quieres eliminar tu perfil? Esta acción no se puede deshacer.")) {
-            // Aquí puedes llamar a la función para eliminar el perfil
-            // Asegúrate de implementar esta función en el componente padre
-            onClose();   // Cerrar el modal después de eliminar
+    //Funcion Update
+    /*const handleSave = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('id', userData.id);
+            formData.append('name', name);
+            formData.append('surname', surname);
+            formData.append('email', email);
+            formData.append('password', password);
+            if (profileImage) {
+                formData.append('profileImage', profileImage);  // Agregar la imagen si se cambió
+            }
+
+            // Hacer la solicitud al backend para actualizar el usuario
+            const response = await axios.put('/api/users/update', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',  // Importante cuando se envían archivos
+                },
+            });
+
+            console.log('Usuario actualizado:', response.data);
+            onClose();  // Cerrar el modal después de guardar
+        } catch (error) {
+            console.error('Error al actualizar el perfil:', error);
         }
-    };
+    };*/
+
+    /*const handleDeleteProfile = async () => {
+        if (window.confirm("¿Estás seguro de que quieres eliminar tu perfil? Esta acción no se puede deshacer.")) {
+            try {
+                const response = await axios.delete(`/api/users/delete/${userData.id}`);
+                console.log('Perfil eliminado:', response.data);
+                onClose();  // Cerrar el modal después de eliminar
+            } catch (error) {
+                console.error('Error al eliminar el perfil:', error);
+            }
+        }
+    };*/
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -145,7 +178,7 @@ function ModificarPerfil({open, onClose, userData}) {
 
                     {/* Botón para eliminar perfil */}
                     <Button 
-                        onClick={handleDeleteProfile} 
+                        onClick={onClose} 
                         variant="contained"  
                         color="error"
                         sx={{ mt: 2, marginRight: 1 , color: "white",

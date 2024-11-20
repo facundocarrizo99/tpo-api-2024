@@ -1,17 +1,19 @@
 import {Button, Card, CardActionArea, CardContent, Typography} from "@mui/material";
-
 import React from "react";
 
 
+
 const GrouopItem = ({budget, showDelete = false}) => {
-    const {name, description, users, expenses} = budget;
+    const {groupName, description, users = [], expenses = []} = budget;
+
+
 
     return (
-        <Card sx={{ maxWidth: 345 }}>
+        <Card  sx={{maxWidth: 345, position: 'relative', transition: 'transform 0.3s ease',  '&:hover': {transform: 'scale(1.05)',},}}>
             <CardActionArea>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        {name}
+                        {groupName}
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary">
                         {description}
@@ -22,11 +24,6 @@ const GrouopItem = ({budget, showDelete = false}) => {
                     <Typography variant="body2" color="text.secondary">
                         {expenses.length} expenses
                     </Typography>
-                    {showDelete && (
-                        <Button variant="contained" color="error">
-                            Delete
-                        </Button>
-                    )}
                 </CardContent>
             </CardActionArea>
         </Card>

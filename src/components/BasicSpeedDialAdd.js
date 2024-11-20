@@ -12,7 +12,7 @@ import {useParams} from "react-router-dom";
 import {findGroupByName} from "../GroupBackend";
 
 
-export function BasicSpeedDial({}) {
+export function BasicSpeedDialAdd({}) {
     const [openExpenseForm, setOpenExpenseForm] = React.useState(false);
     const [openArregloForm, setOpenArregloForm] = React.useState(false);
     const handleOpenAddExpenseForm = () => setOpenExpenseForm(true);
@@ -25,10 +25,9 @@ export function BasicSpeedDial({}) {
 
 
     return (
-        <Box sx={{height: 320, transform: 'translateZ(0px)', flexGrow: 1}}>
+        <Box sx={{transform: 'translateZ(0px)', flexGrow: 1}}>
             <SpeedDial
                 ariaLabel="SpeedDial basic example"
-                sx={{position: 'absolute', bottom: 16, right: 16}}
                 icon={<SpeedDialIcon/>}
             >
                 <SpeedDialAction
@@ -50,7 +49,7 @@ export function BasicSpeedDial({}) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <AddExpenseForm users={users} selectedGroup={groupName}/>
+                <AddExpenseForm users={users} selectedGroup={groupName} onClose={handleCloseExpenseForm}/>
             </Modal>
             <Modal
                 open={openArregloForm}
@@ -58,7 +57,7 @@ export function BasicSpeedDial({}) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <AddArregloForm users={users} selectedGroup={groupName}/>
+                <AddArregloForm users={users} selectedGroup={groupName} onClose={handleCloseArregloForm}/>
             </Modal>
         </Box>
     );

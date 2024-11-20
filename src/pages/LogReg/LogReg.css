@@ -21,12 +21,19 @@ body{
     gap: 9px;
     width: 100%;
     margin-top: 30px;
+    
 }
+
 
 .text-arreglemos{
     color: #101010;
     font-size: 45px;
     font-weight: 700;
+    cursor: pointer;
+}
+
+.text-arreglemos:hover{
+    transform: scale(1.05); /* Aumentar el tamaño al pasar el mouse */
 }
 
 .text-interactivo{

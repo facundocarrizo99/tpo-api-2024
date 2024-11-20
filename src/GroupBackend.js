@@ -1,28 +1,27 @@
 var groups = [
     {
-        name: 'Asado',
+        groupName: 'Asado',
         description: 'Asado para el cumpleaños de Santiago',
-        users: [{id: 1, name: 'Santiago'}, {id: 2, name: 'Facundo'}],
+        users: [{id: 1, name: 'Santiago'}, {id: 2, name: 'Facundo'}, {id: 3, name: 'Juan'}],
         expenses: [
-            { id: 1, user: 'Santiago', description: 'Carne', amount: 100, date: '2023-01-01' },
-            { id: 2, user: 'Facundo', description: 'Pan y Verduras', amount: 200, date: '2023-01-02' },
-            { id: 3, user: 'Santiago', description: 'Carbon', amount: 50, date: '2023-01-01' },
-            { id: 4, user: 'Santiago', description: 'Cerbeza', amount: 115, date: '2023-01-02' },
+            { id: 1, user: 'Santiago', description: 'Carne', amount: 200, date: '2023-01-01' },
+            { id: 2, user: 'Facundo', description: 'Pan y Verduras', amount: 100, date: '2023-01-02' },
+            { id: 3, user: 'Facundo', description: 'Pan y Verduras', amount: 300, date: '2023-01-03' },
+
         ],
         arreglos: [],
     },
     {
-        name: 'grupo 2',
+        groupName: 'grupo 2',
         description: 'Descripción del grupo 2',
         users: [{id: 3, name: 'user3'}, {id: 4, name: 'user4'}, {id: 1, name: 'Santiago'}],
         expenses: [
             { id: 1, user: 'user3', description: 'compra 3', amount: 300, date: '2023-02-01' },
-            { id: 2, user: 'user4', description: 'compra 4', amount: 400, date: '2023-02-02' },
         ],
         arreglos: [],
     },
     {
-        name: 'grupo 3',
+        groupName: 'grupo 3',
         description: 'Descripción del grupo 3',
         users: [{id: 5, name: 'user5'}, {id: 6, name: 'user6'}],
         expenses: [
@@ -36,7 +35,8 @@ var groups = [
 
 
 function findGroupByName(groupName) {
-    return groups.find(group => group.name === groupName);
+    console.log('Buscando grupo con nombre:', groupName);
+    return groups.find(group => group.groupName === groupName);
 }
 
 function fetchData() {
@@ -45,6 +45,7 @@ function fetchData() {
 
 function addExpense(groupName, expense) {
     const group = findGroupByName(groupName);
+    console.log('Buscando grupo con nombre arreglo:', groupName);
     if (group) {
         group.expenses.push(expense);
     }
@@ -67,6 +68,7 @@ function deleteGroup(group) {
 
 function addArreglo(groupName, arreglo) {
     const group = findGroupByName(groupName);
+
     if (group) {
         group.arreglos.push(arreglo);
     }

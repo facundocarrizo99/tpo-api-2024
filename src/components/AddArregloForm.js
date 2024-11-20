@@ -1,16 +1,20 @@
 import React, {useState} from "react";
 import {Box, Button, FormControl, InputLabel, List, MenuItem, Select, TextField, Typography} from "@mui/material";
 import {addArreglo} from "../GroupBackend";
-import ListItem from "@mui/material/ListItem";
+import ticket from '/Users/Santiago/Desktop/API/tpo-api-2024/src/assets/ticket.png';
 
-function ArregloForm({users}, {selectedGroup}) {
+
+function ArregloForm({users, selectedGroup, onClose}) {
     const [formArregloValues, setFormArregloValues] = useState({
         groupName: '',
         payer: [],
         receiver: [],
         description: '',
         amount: 0,
+        ticketImage: null,
     });
+
+    const [ticketImage, setTicketImage] = useState(null); // Estado para almacenar la imagen
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -20,10 +24,23 @@ function ArregloForm({users}, {selectedGroup}) {
         });
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setTicketImage(reader.result); // Guardar la imagen en el estado
+            };
+            reader.readAsDataURL(file); // Leer el archivo como una URL de datos
+        }
+    };
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         addArreglo(selectedGroup, formArregloValues);
         console.log('Arreglo created:', formArregloValues);
+        onClose();
     };
 
 
@@ -35,54 +52,101 @@ function ArregloForm({users}, {selectedGroup}) {
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: 500,
-                backgroundColor: '#f4f4f4',
+                width: 450,
+                backgroundColor: 'white',
+                borderRadius: "8px",
                 border: '2px solid #000',
                 boxShadow: 24,
                 p: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
             }}
             noValidate
             autoComplete="off"
             onSubmit={handleSubmit}
         >
-            <Typography variant="h5" component="h1" gutterBottom align={"center"}>
+            <Typography variant="h5" component="h1" gutterBottom align={"center"} color="#101010">
                 Crear nuevo Arreglo
             </Typography>
-            <List sx={{width: '100%', maxWidth: 360}}>
-                <ListItem >
+
+                    <Box
+                        component="img"
+                        src={ticketImage || ticket}
+                        alt="ticket"
+                        sx={{
+                            width: '200px',
+                            height: '200px',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            transition: 'transform 0.2s',
+                            '&:hover': {
+                                transform: 'scale(1.1)', // Efecto de zoom al pasar el cursor
+                            },
+                        }}
+                    />
+                    <input
+                        id="profile-image-input"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange} // Manejar el cambio de imagen
+                        style={{ display: 'none' }} // Ocultar el input
+                    />
+
+                    {/* Botón para subir la foto */}
+                <Button 
+                    variant="contained" 
+                    color="success" 
+                    sx={{ mt: 2,
+                    '&:hover': {
+                                transform: 'scale(1.1)', // Efecto de zoom al pasar el cursor
+                            } }} 
+                    onClick={() => document.getElementById('profile-image-input').click()}
+                    
+                >
+                    Subir Ticket
+                </Button>
+
+
+
+            
                     <TextField
-                        label="Description"
+                        label="Descripcion"
                         variant="outlined"
-                        name="descripcion"
+                        name="description"
                         fullWidth={true}
                         value={formArregloValues.description}
                         onChange={handleChange}
                         multiline
                         rows={2}
                         required
+                        sx={{ mt: 2, width: '100%' }}
                     />
-                </ListItem>
-                <ListItem >
+                
+                
                     <TextField
-                        label="amount"
+                        label="Monto"
                         variant="outlined"
-                        name="monto"
+                        name="amount"
                         fullWidth={true}
+                        type="number" // Asegúrate de que sea un número
                         value={formArregloValues.amount}
                         onChange={handleChange}
                         required
+                        sx={{ mt: 2, width: '100%' }}
                     />
-                </ListItem>
-                <ListItem sx={{width: '100%', maxWidth: 360}}>
+               
+                
                     <FormControl fullWidth margin="normal">
-                        <InputLabel id="payer-select-label">Payer</InputLabel>
+                        <InputLabel id="payer-select-label">Persona que Paga</InputLabel>
                         <Select
                             labelId="payer-select-label"
                             id="payer"
-                            name="Quien Paga?"
+                            name="payer"
                             single
                             value={formArregloValues.payer}
                             onChange={handleChange}
+                            sx={{ mt: 2, width: '100%' }}
                         >
                             {users.map((user) => (
                                 <MenuItem key={user.id} value={user.name}>
@@ -91,17 +155,18 @@ function ArregloForm({users}, {selectedGroup}) {
                             ))}
                         </Select>
                     </FormControl>
-                </ListItem>
-                <ListItem sx={{width: '100%', maxWidth: 360}}>
+               
+              
                     <FormControl fullWidth margin="normal">
-                        <InputLabel id="receiver-select-label">Receiver</InputLabel>
+                        <InputLabel id="receiver-select-label">Persona que Recibe</InputLabel>
                         <Select
                             labelId="receiver-select-label"
                             id="receiver"
-                            name="Quien recibe?"
+                            name="receiver"
                             sinlge
                             value={formArregloValues.receiver}
                             onChange={handleChange}
+                            sx={{ mt: 2, width: '100%' }}
                         >
                             {users.map((user) => (
                                 <MenuItem key={user.id} value={user.name}>
@@ -110,16 +175,38 @@ function ArregloForm({users}, {selectedGroup}) {
                             ))}
                         </Select>
                     </FormControl>
-                </ListItem>
-            </List>
-            <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                sx={{mt: 2}}
-            >
-                Create Arreglo
-            </Button>
+              
+            
+            
+            <div style={{display: "flex", justifyContent: "space-between", marginTop: 20}}>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="success"
+                    sx={{
+                                mt: 2, marginRight: 2,
+                                '&:hover': {
+                                    transform: 'scale(1.1)', 
+                                },
+                            }}
+                >
+                    Subir Arreglo
+                </Button>
+                <Button
+                    type="submit"
+                    onClick={onClose}
+                    variant="contained"
+                    color="error"
+                    sx={{
+                                mt: 2,
+                                '&:hover': {
+                                    transform: 'scale(1.1)', 
+                                },
+                            }}
+                >
+                    cancelar
+                </Button>
+            </div>
         </Box>
     );
 }

@@ -1,17 +1,20 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {AppBar, Toolbar, Button, Container, Grid, Card, CardContent, Typography, ButtonGroup, Avatar} from '@mui/material';
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import {useNavigate} from 'react-router-dom';
+import { AuthContext } from './AuthContext'; // Importar el contexto de autenticación
 
 function NavBarDashboard  ({onProfileClick}) {
 
     const navigate = useNavigate();
+    const { isLoggedIn, logout } = useContext(AuthContext); // Obtener el estado de autenticación y la función de logout
     const handleLanding = () => {
         navigate('/');
     }
-    const handleLogin = () => {
-      navigate('/Login');
-  }
+    const handleLogout = () => {
+      logout(); // Llamar a la función de logout del contexto
+      navigate('/'); // Redirigir al inicio
+  };
 
     //Falta agregar imagen y nombre de usuario como prop. Falta agregar funcionalidad de las pestañas a los botones de perfil y proyectos//
 
@@ -39,7 +42,7 @@ function NavBarDashboard  ({onProfileClick}) {
                 style={{ width: 30, height: 30, marginRight: 8 }}/>
           </div>
 
-          <Button variant="contained" sx={{ backgroundColor: "#CC0F0F", color: "white", '&:hover': {transform: 'scale(1.1)', transition: 'transform 0.3s ease'}}} onClick={handleLogin}>
+          <Button variant="contained" sx={{ backgroundColor: "#CC0F0F", color: "white", '&:hover': {transform: 'scale(1.1)', transition: 'transform 0.3s ease'}}} onClick={handleLogout}>
             Cerrar Sesión
           </Button>
         </div>

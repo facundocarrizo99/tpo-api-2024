@@ -11,8 +11,6 @@ import {fetchData } from '../GroupBackend';
 import NavBarDashboard from "../components/NavBarDashboard";
 import ModificarPerfil from "../components/ModificarPerfil";
 
-
-
 function Dashboard() {
     const userName = "Facundo"; // Nombre del usuario, puedes reemplazarlo por uno dinámico si lo prefieres
     const [budgets, setBudgets] = React.useState([]); // Estado para almacenar los presupuestos o grupos de gastos
@@ -24,22 +22,42 @@ function Dashboard() {
     const handleNewGroupOpen = () => setOpen(true);
     // Función para cerrar el modal
     const handleNewGroupClose = () => setOpen(false);
-
     // Función para abrir el modal
     const handleOpenProfileModal = () => setOpenProfileModal(true);
     // Función para cerrar el modal
     const handleCloseProfileModal = () => setOpenProfileModal(false);
 
+    /*async function fetchGroups(query, page, limit) {
+        const url = `/api/groups?query=${query}&page=${page}&limit=${limit}`;
+      
+        try {
+          const response = await fetch(url);
+      
+          // Verificamos si la respuesta fue exitosa (código 200-299)
+          if (!response.ok) {
+            throw new Error(`Error al obtener los grupos: ${response.statusText}`);
+          }
+      
+          // Convertimos la respuesta a JSON
+          const data = await response.json();
+          return data;  // Devuelve los datos de los grupos
+        } catch (error) {
+          console.error('Error en la solicitud:', error);
+        }
+      }*/
     
-
-    // Simulación de la función fetchData que obtiene los grupos de gastos
+    
+        // Simulación de la función fetchData que obtiene los grupos de gastos
     React.useEffect(() => {
         const fetchBudgets = async () => {
             const data = await fetchData();  // Asume que fetchData es una función que devuelve los datos
+            console.log('Fetched Data:', data); // Revisa la estructura aquí
             setBudgets(data); // Guarda los datos en el estado
         };
         fetchBudgets();
     }, []);
+
+   
 
     
 
@@ -53,15 +71,20 @@ function Dashboard() {
                 {budgets && budgets.length > 0 ? (
                     <Container maxWidth="xl">
                         <Typography variant="h4" color="#F8F8F8" marginTop={5} marginBottom={5}>Desde esta ventana puedes gestionar tus Grupos!</Typography>
-                        <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
-                            {budgets.map((budget) => (
-                                <Grid key={budget.name} size={{xs: 2, sm: 4, md: 4}} sx={{transition: 'transform 0.3s ease', '&:hover': {transform: 'scale(1.05)',  },}}>
+                        <Grid container spacing={{xs: 2, md: 8}} columns={{xs: 4, sm: 8, md: 12}}>
+                            {console.log("budgets:", budgets)}
+                            {budgets.map((budget) => {
+                                console.log("Budget Name:", budget.groupName);
+                                
+                            return(  
+                                <Grid key={budget.groupName} size={{xs: 2, sm: 4, md: 4}}>
                                     {/* Envolver GroupItem en un enlace que redirige a la página del grupo */}
-                                    <Link to={`/group/${budget.name}`} style={{textDecoration: 'none'}}>
+                                    <Link to={`/group/${budget.groupName}`} style={{textDecoration: 'none'}}>
                                         <GroupItem budget={budget}/>
                                     </Link>
                                 </Grid>
-                            ))}
+                            );
+                            })}
                         </Grid>
                     </Container>
                 ) : (

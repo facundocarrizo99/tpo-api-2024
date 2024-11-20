@@ -11,7 +11,10 @@ function GroupForm({open, onClose}) {
         profileImage: null,
     });
 
-    const [imagePreview, setImagePreview] = useState(); // Preview de la imagen
+    const [imagePreview, setImagePreview] = useState(); // Preview de la 
+    //const [usersList, setUsersList] = useState([]); // Lista de usuarios obtenidos desde el backend
+    
+    
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -38,12 +41,100 @@ function GroupForm({open, onClose}) {
         });
     };
 
+    /*useEffect(() => {
+        // Obtener los usuarios al cargar el componente
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch(`/api/users?page=${page}&limit=10`);
+                const data = await response.json();
+                if (response.ok) {
+                    setUsersList(data.docs);  // Suponiendo que 'docs' es el array de usuarios
+                    setTotalUsers(data.total); // Total de usuarios para la paginación
+                } else {
+                    throw new Error('No se pudieron cargar los usuarios');
+                }
+            } catch (error) {
+                console.error('Error al obtener usuarios:', error);
+                setError('Error al cargar los usuarios');
+            }
+        };
+
+        fetchUsers();
+    }, [page]); // Vuelve a ejecutar cuando la página cambie
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Validar campos del formulario
+        if (!formValues.groupName || !formValues.email || !formValues.description) {
+            setError("Por favor, completa todos los campos obligatorios.");
+            return;
+        }
+
+        setLoading(true);  // Iniciar el estado de carga
+
+        // Crear FormData
+        const formData = new FormData();
+        formData.append('name', formValues.groupName);
+        formData.append('email', formValues.email);
+        formData.append('description', formValues.description);
+        formData.append('users', formValues.users.join(','));  // Convertir array a string
+        if (formValues.profileImage) {
+            formData.append('profileImage', formValues.profileImage);
+        }
+
+        try {
+            const response = await fetch('/api/groups', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error al crear el grupo: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('Grupo creado:', data);
+
+            // Si el backend devuelve un token o mensaje, guardarlo
+            if (data.token) {
+                localStorage.setItem('groupToken', data.token);  // Guardar token si es necesario
+            }
+
+            // Resetear formulario y cerrar modal
+            onClose();
+            setFormValues({
+                groupName: '',
+                email: '',
+                description: '',
+                users: [],
+                profileImage: null,
+            });
+            setImagePreview(null);
+            setError(null);  // Limpiar errores
+        } catch (error) {
+            console.error('Error al crear el grupo:', error);
+            setError("Hubo un error al intentar crear el grupo. Intenta nuevamente.");
+        } finally {
+            setLoading(false);  // Terminar el estado de carga
+        }
+    }*/
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         addGroup(formValues);
         console.log('Group created:', formValues);
+        onClose();
+        setFormValues({ // Resetea los valores del formulario.
+            groupName: '',
+            users: [],
+            description: '',
+            profileImage: null
+        });
+        
     };
 
+    //Agregar logica para mostrar en el form el array de usuarios registrados para la creacion del grupo
     const usersList = [
         {id: 1, name: 'Santiago'},
         {id: 2, name: 'Facundo'},
@@ -60,7 +151,7 @@ function GroupForm({open, onClose}) {
                     bgcolor: 'white',
                     borderRadius: '8px',
                     p: 4,
-                    width: '450px',
+                    width: 450,
                     margin: 'auto',
                     display: 'flex',
                     flexDirection: 'column',
@@ -161,8 +252,29 @@ function GroupForm({open, onClose}) {
                     </Select>
                 </FormControl>
 
+                {/* Formulario para hacer un fetch de todos los usuarios de la base de datos
+                <FormControl fullWidth margin="normal">
+                    <InputLabel id="users-label">Usuarios</InputLabel>
+                    <Select
+                        labelId="users-label"
+                        id="users"
+                        name="users"
+                        multiple
+                        value={formValues.users}
+                        onChange={handleChange}
+                        renderValue={(selected) => selected.join(', ')}
+                    >
+                        {usersList.map((user) => (
+                            <MenuItem key={user._id} value={user.name}>
+                                {user.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>*/}
+
                 <div style={{display: "flex", justifyContent: "space-between", marginTop: 20}}>
                     <Button
+                            onClick={handleSubmit}
                             variant="contained"
                             color="success"
                             sx={{

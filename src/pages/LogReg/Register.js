@@ -18,6 +18,63 @@ const Register = (registerUser) => {
     return emailPattern.test(email);
   };
 
+  /*const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Verifica si el correo y nombre de usuario ya existen
+    const existingEmail = users.find((user) => user.email === email);
+    const existingUser = findUser(users, username);
+
+    if (validateEmail(email)) {
+      if (existingEmail) {
+        console.error("El correo electrónico ya está en uso.");
+        alert("El correo electrónico ya está en uso.");
+        return;
+      }
+
+      if (existingUser) {
+        console.error("El nombre de usuario ya existe.");
+        alert("El nombre de usuario ya existe.");
+        return;
+      }
+
+      const newUser = { name: username, email, password };
+
+      try {
+        // Llamada al backend para crear un usuario
+        const response = await fetch('http://localhost:5000/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newUser),
+        });
+
+        // Manejo de respuesta del backend
+        if (!response.ok) {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.message || 'Hubo un problema con el registro.'}`);
+          return;
+        }
+
+        // Si el registro es exitoso, guardar el token en sessionStorage
+        const data = await response.json();
+        sessionStorage.setItem("access-token", data.token);
+        
+        // Redirigir al login
+        alert("Registro exitoso. Ya puedes iniciar sesión.");
+        navigate('/Login');
+      } catch (error) {
+        console.error("Error durante el registro:", error);
+        alert("Error al conectar con el servidor.");
+      }
+    } else {
+      alert("Por favor, ingrese un correo electrónico válido.");
+    }
+  };*/
+
+
+  
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -52,7 +109,7 @@ const Register = (registerUser) => {
     <div className= "container">
 
       <div className= "header">
-        <div className= "text-arreglemos">Arreglemos<AssuredWorkloadIcon className= "Logo" style={{color: "#101010"}}/></div>
+        <div className= "text-arreglemos"  onClick={() => navigate('/')}>Arreglemos<AssuredWorkloadIcon className= "Logo" style={{color: "#101010"}}/></div>
         <div className= "text-interactivo">Registrarse</div>
         <div className= "underline"></div>
       </div>
