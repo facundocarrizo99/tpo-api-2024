@@ -12,7 +12,7 @@ const Login = ({ searchUser}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // Obtener la función de inicio de sesión desde el contexto
+  const {login} = useContext(AuthContext); // Obtener la función de inicio de sesión desde el contexto
 
   //Tomo valores para hacer la llamada a la base de datos
   const handleEmailChange = (e) => {
@@ -39,7 +39,7 @@ const Login = ({ searchUser}) => {
   }*/
 
   //Lo que en teoria deberia andar
-  const handleSubmit2 = async (e) => {
+  /* handleSubmit2 = async (e) => {
     e.preventDefault();
   
     // Mostrar los valores de email y password
@@ -84,12 +84,12 @@ const Login = ({ searchUser}) => {
       console.error('Error durante el inicio de sesión:', error);
       alert('Error al conectar con el servidor.');
     }
-  };
+  };*/
 
 
-  /*const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
       e.preventDefault();
-      const user = findUser(users, username);
+      const user = findUser(users, email);
       console.log("Usuario buscado:", user);
 
       if (user) {
@@ -102,11 +102,11 @@ const Login = ({ searchUser}) => {
       } else {
         alert("Usuario no encontrado.");
       }
-  };*/
+  };
   
 
   return (
-    <form onSubmit={handleSubmit2} className= "container">
+    <form onSubmit={handleSubmit} className= "container">
 
       <div className= "header">
         <div className= "text-arreglemos"  onClick={() => navigate('/')}>Arreglemos<AssuredWorkloadIcon className= "Logo" style={{color: "#101010"}}/></div>
@@ -129,7 +129,7 @@ const Login = ({ searchUser}) => {
       <div className= "forgot-password">Perdiste tu contraseña? <span>Hace click aqui!</span></div>
       <div className= "submit-container">
         <div className="submit gray"  onClick={() => navigate('/Register')}>Registrarse</div>
-        <div className="submit" onClick={handleSubmit2} >Ingresar</div>
+        <div className="submit" onClick={handleSubmit} >Ingresar</div>
       </div>
 
     </form>

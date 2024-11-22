@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Box, Typography, TextField, Button, Avatar, MenuItem } from '@mui/material';
-import imgPerfil from '/Users/Santiago/Desktop/API/tpo-api-2024/src/assets/perfil.png'
+import { Modal, Box, Typography, TextField, Button } from '@mui/material';
+import imgPerfil from '../assets/perfil.png';
 //import axios from 'axios';  // Asegúrate de tener axios instalado
 
 //Falta agregar que la imagen de perfil se pasa como prop para que el nav bar la tenga//
@@ -84,7 +84,7 @@ function ModificarPerfil({open, onClose, userData}) {
                     bgcolor: 'white',
                     borderRadius: '8px',
                     p: 4,
-                    width: '450px',
+                    width: '400px',
                     margin: 'auto',
                     display: 'flex',
                     flexDirection: 'column',

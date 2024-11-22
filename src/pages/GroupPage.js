@@ -1,13 +1,15 @@
 import {useParams} from "react-router-dom";
 import {Container, List, Typography, Button, Box, ListItem, LinearProgress} from "@mui/material";
 import Footer from "../components/Footer/Footer";
-import React from "react";
+import React, {useState} from "react";
 import {BasicSpeedDialAdd} from "../components/BasicSpeedDialAdd";
 import ExpenseItem from "../components/ExpenseItem";
 import {findGroupByName} from "../GroupBackend";
 import {useNavigate} from 'react-router-dom';
 import NavBarDashboard from "../components/NavBarDashboard";
-import { BasicSpeedDialMod } from "../components/BasicSpeedDialMod";
+import EditIcon from '@mui/icons-material/Edit';
+import ModificarGrupo from "../components/ModificarGrupo";
+
 
 
 function GroupPage() {
@@ -15,6 +17,13 @@ function GroupPage() {
     const group = findGroupByName(groupName);
     const expenses = group ? group.expenses : [];
     const navigate = useNavigate();
+
+    const [isModalOpen, setModalOpen] = useState(false);
+
+    // Funciones para abrir y cerrar el modal
+    const handleOpenModal = () => setModalOpen(true);
+    const handleCloseModal = () => setModalOpen(false);
+    
 
     const handleBackToGroups = () => {
         navigate('/home'); // Cambia la ruta a donde necesites redirigir
@@ -56,7 +65,12 @@ function GroupPage() {
         <div style={{backgroundColor: "#101010"}}>
             <NavBarDashboard/>
             <Container maxWidth="xl">
+
+
+            <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                 <Typography variant="h4" color="#F8F8F8" marginBottom={1}>Grupo {groupName}</Typography>
+                <EditIcon sx={{ marginLeft: 1 ,cursor: "pointer", color: "#F8F8F8",'&:hover': { transform: 'scale(1.4)' }}} onClick={handleOpenModal}/>
+            </Box>
                 
                 {expenses && expenses.length > 0 ? (
                     <Container maxWidth="xl">
@@ -111,13 +125,19 @@ function GroupPage() {
                         
                     <Box sx={{marginTop: 15, display: "flex", justifyContent: "center", position: "relative"}}>
                         <Box sx={{ position: "absolute", display: "flex", justifyContent: "space-around", right: 20, bottom: 20 }}>
-                            <BasicSpeedDialMod/>
                             <BasicSpeedDialAdd/>                      
                         </Box>
                         <Button variant="contained" color="error" onClick={handleBackToGroups} sx={{color: "white", '&:hover': { transform: 'scale(1.1)', }}}>Volver a tus Grupos</Button>
                     </Box>
 
             </Container>
+
+            <ModificarGrupo
+                open={isModalOpen}
+                onClose={handleCloseModal}
+            />
+
+
         <Footer/>
     </div>
     )

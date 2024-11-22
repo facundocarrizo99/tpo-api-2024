@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {TextField, Button, Typography, FormControl, InputLabel, Select, MenuItem, List, Box} from '@mui/material';
 import {addExpense} from "../GroupBackend";
 import * as PropTypes from "prop-types";
-import ticket from '/Users/Santiago/Desktop/API/tpo-api-2024/src/assets/ticket.png'
+import ticket from '../assets/ticket.png';
 
 
 function CloudUploadIcon() {
