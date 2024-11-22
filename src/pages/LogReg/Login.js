@@ -39,27 +39,27 @@ const Login = ({ searchUser}) => {
   }*/
 
   //Lo que en teoria deberia andar
-  /* handleSubmit2 = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
   
     // Mostrar los valores de email y password
     console.log('Email:', email);
     console.log('Password:', password);
   
-    // Convertir el body a formato URL-encoded
-    const body = new URLSearchParams({
+    
+    const body = {
       email: email,
-      password: password
-    }).toString();
-    console.log("Request Body:", body); // Ver el cuerpo de la solicitud en formato URL-encoded
+      password: password,
+    };
+    console.log("Request Body:", body); 
   
     try {
       const response = await fetch('http://localhost:4000/api/users/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded', // Cambiar el tipo de contenido
+          'Content-Type': 'application/json', 
         },
-        body: body.toString(), // Usar el cuerpo codificado en formato URL
+        body: JSON.stringify(body), 
       });
   
       if (!response.ok) {
@@ -84,10 +84,10 @@ const Login = ({ searchUser}) => {
       console.error('Error durante el inicio de sesión:', error);
       alert('Error al conectar con el servidor.');
     }
-  };*/
+  };
 
 
-  const handleSubmit = (e) => {
+  /*const handleSubmit = (e) => {
       e.preventDefault();
       const user = findUser(users, email);
       console.log("Usuario buscado:", user);
@@ -102,7 +102,7 @@ const Login = ({ searchUser}) => {
       } else {
         alert("Usuario no encontrado.");
       }
-  };
+  };*/
   
 
   return (
