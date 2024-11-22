@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Box, Button, FormControl, InputLabel, List, MenuItem, Select, TextField, Typography} from "@mui/material";
 import {addArreglo} from "../GroupBackend";
-import ticket from '/Users/Santiago/Desktop/API/tpo-api-2024/src/assets/ticket.png';
+import ticket from '../assets/ticket.png';
 
 
 function ArregloForm({users, selectedGroup, onClose}) {
