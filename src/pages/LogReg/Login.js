@@ -23,21 +23,6 @@ const Login = ({ searchUser}) => {
     setPassword(e.target.value);
   };
 
-  //Ejemplo profe
-  /*const handleSubmit = async (e) => {
-    e.preventDefault();
-    //Llamada a endpoint de log in
-    let response = await login(username, password);
-    console.log(response);
-    console.log("Guardo el token en session storage");
-    if(response.status === 200){
-      sessionStorage.setItem("access-token", response.token);
-      navigate('/Home');
-    } else {
-      
-    }
-  }*/
-
   //Lo que en teoria deberia andar
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,7 +44,7 @@ const Login = ({ searchUser}) => {
         headers: {
           'Content-Type': 'application/json', 
         },
-        body: JSON.stringify(body), 
+        body: JSON.stringify(body),
       });
   
       if (!response.ok) {
