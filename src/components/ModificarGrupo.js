@@ -1,20 +1,101 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import imgGrupo from '../assets/grupo.png';
+import { useNavigate } from 'react-router';
 
 function ModificarGrupo({ open, onClose, groupData, onGroupUpdate, onGroupDelete }) {
+
+  const navigate = useNavigate();
+  
+  const token = sessionStorage.getItem('access-token');
+  const actualGroup = JSON.parse(sessionStorage.getItem('actualGroup'));
+  const actualName = actualGroup.name;
+  const actualDescription = actualGroup.description;
+  const actualGroupId = actualGroup._id;
+  
   const [imagePreview, setImagePreview] = useState(imgGrupo); // Imagen por defecto
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  
+
+
   // Cargar los datos del grupo cuando el modal está abierto
   useEffect(() => {
-    if (open && groupData) {
-      setName(groupData.name);
-      setDescription(groupData.description);
-      setImagePreview(groupData.image || '/default-group.png'); // Imagen del grupo o por defecto
+    setName(actualName || '');
+    setDescription(actualDescription || '');
+    //setImagePreview(groupData.image || '/default-group.png'); // Imagen del grupo o por defecto
+}, [actualName, actualDescription]);
+
+
+
+  const handleUpdateGroup = async (groupId) => {
+    try {
+        // Crear el cuerpo de la solicitud con solo el nombre y la descripción actualizados
+        const requestBody = {
+            name: name || actualName,
+            description: description || actualDescription,
+        };
+
+        console.log(requestBody);
+
+        // Realizar la solicitud PUT para actualizar los datos del grupo, pasando el groupId en la URL
+        const response = await fetch(`http://localhost:4000/api/groups/update`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': token, 
+                'groupid': actualGroupId,
+            },
+            body: JSON.stringify(requestBody),
+        });
+
+        // Verificar la respuesta del servidor
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Grupo actualizado:', result);
+            alert('Grupo actualizado exitosamente');
+            onClose(); // Cerrar el modal después de la actualización
+            navigate('/Home');
+        } else {
+            const error = await response.json();
+            console.error('Error al actualizar el grupo:', error);
+            alert('Hubo un error al actualizar el grupo');
+        }
+    } catch (error) {
+        console.error('Error en la solicitud de actualización:', error);
+        alert('Hubo un error al actualizar el grupo');
     }
-  }, [open, groupData]);
+};
+
+const handleDeleteGroup = async (groupId) => {
+  try {
+      // Realizar la solicitud DELETE para eliminar el grupo, pasando el groupId en la URL
+      const response = await fetch(`http://localhost:4000/api/groups/delete`, {
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json',
+              'x-access-token': token,  // El token de autenticación
+              'groupid': actualGroupId,
+          },
+      });
+
+      // Verificar la respuesta del servidor
+      if (response.ok) {
+          const result = await response.json();
+          console.log('Grupo eliminado:', result);
+          alert('Grupo eliminado exitosamente');
+          onClose(); // Cerrar el modal después de la eliminación
+          navigate('/Home');
+      } else {
+          const error = await response.json();
+          console.error('Error al eliminar el grupo:', error);
+          alert('Hubo un error al eliminar el grupo');
+      }
+  } catch (error) {
+      console.error('Error en la solicitud de eliminación:', error);
+      alert('Hubo un error al eliminar el grupo');
+  }
+};
+
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -24,22 +105,6 @@ function ModificarGrupo({ open, onClose, groupData, onGroupUpdate, onGroupDelete
         setImagePreview(reader.result); // Actualizar la vista previa
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSave = () => {
-    if (onGroupUpdate) {
-      onGroupUpdate({ name, description, image: imagePreview }); // Enviar los datos actualizados
-    }
-    onClose();
-  };
-
-  const handleDelete = () => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar este grupo? Esta acción no se puede deshacer.")) {
-      if (onGroupDelete) {
-        onGroupDelete(groupData.id); // Notificar la eliminación del grupo
-      }
-      onClose();
     }
   };
 
@@ -117,7 +182,7 @@ function ModificarGrupo({ open, onClose, groupData, onGroupUpdate, onGroupDelete
         {/* Botones */}
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 20, width: '100%' }}>
           <Button
-            onClick={handleSave}
+            onClick={handleUpdateGroup}
             variant="contained"
             color="success"
             sx={{
@@ -129,7 +194,7 @@ function ModificarGrupo({ open, onClose, groupData, onGroupUpdate, onGroupDelete
             Guardar
           </Button>
           <Button
-            onClick={handleDelete}
+            onClick={handleDeleteGroup}
             variant="contained"
             color="error"
             sx={{

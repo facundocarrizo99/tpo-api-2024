@@ -1,32 +1,35 @@
-import {Button, Card, CardActionArea, CardContent, Typography} from "@mui/material";
+import {Card, CardActionArea, CardContent, Typography} from "@mui/material";
 import React from "react";
 
+const GroupItem = ({budget, showDelete = false}) => {
+    const { name, description, expenses, participants} = budget;
 
+    const handleClick = () => {
+        // Guardar el ID del grupo en sessionStorage y redirigir al grupo específico
+        sessionStorage.setItem('actualGroup', JSON.stringify(budget));
+        console.log(JSON.stringify(budget));
 
-const GrouopItem = ({budget, showDelete = false}) => {
-    const {groupName, description, users = [], expenses = []} = budget;
-
-
+      };
 
     return (
         <Card  sx={{maxWidth: 345, position: 'relative', transition: 'transform 0.3s ease',  '&:hover': {transform: 'scale(1.05)',},}}>
-            <CardActionArea>
+            <CardActionArea onClick={handleClick}>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        {groupName}
+                        {name}
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary">
                         {description}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {users.length} members
+                        {participants.length} Miembros
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {expenses.length} expenses
+                        {expenses.length} Gastos
                     </Typography>
                 </CardContent>
             </CardActionArea>
         </Card>
     );
 };
-export default GrouopItem;
+export default GroupItem;

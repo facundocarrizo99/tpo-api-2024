@@ -1,7 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {TextField, Button, Box, Typography, MenuItem, Select, InputLabel, FormControl, Modal} from '@mui/material';
-import {addGroup} from "../GroupBackend";
-
 
 function GroupForm({open, onClose}) {
     const [formValues, setFormValues] = useState({
@@ -12,9 +10,6 @@ function GroupForm({open, onClose}) {
     });
 
     const [imagePreview, setImagePreview] = useState(); // Preview de la 
-    //const [usersList, setUsersList] = useState([]); // Lista de usuarios obtenidos desde el backend
-    
-    
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -41,106 +36,62 @@ function GroupForm({open, onClose}) {
         });
     };
 
-    /*useEffect(() => {
-        // Obtener los usuarios al cargar el componente
-        const fetchUsers = async () => {
-            try {
-                const response = await fetch(`/api/users?page=${page}&limit=10`);
-                const data = await response.json();
-                if (response.ok) {
-                    setUsersList(data.docs);  // Suponiendo que 'docs' es el array de usuarios
-                    setTotalUsers(data.total); // Total de usuarios para la paginación
-                } else {
-                    throw new Error('No se pudieron cargar los usuarios');
-                }
-            } catch (error) {
-                console.error('Error al obtener usuarios:', error);
-                setError('Error al cargar los usuarios');
-            }
-        };
-
-        fetchUsers();
-    }, [page]); // Vuelve a ejecutar cuando la página cambie
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Validar campos del formulario
-        if (!formValues.groupName || !formValues.email || !formValues.description) {
-            setError("Por favor, completa todos los campos obligatorios.");
+        
+        // Validar que el nombre y la descripción estén llenos
+        if (!formValues.groupName || !formValues.description) {
+            alert('Por favor, completa todos los campos obligatorios.');
             return;
         }
-
-        setLoading(true);  // Iniciar el estado de carga
-
-        // Crear FormData
-        const formData = new FormData();
-        formData.append('name', formValues.groupName);
-        formData.append('email', formValues.email);
-        formData.append('description', formValues.description);
-        formData.append('users', formValues.users.join(','));  // Convertir array a string
-        if (formValues.profileImage) {
-            formData.append('profileImage', formValues.profileImage);
-        }
-
-        try {
-            const response = await fetch('/api/groups', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error al crear el grupo: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            console.log('Grupo creado:', data);
-
-            // Si el backend devuelve un token o mensaje, guardarlo
-            if (data.token) {
-                localStorage.setItem('groupToken', data.token);  // Guardar token si es necesario
-            }
-
-            // Resetear formulario y cerrar modal
-            onClose();
-            setFormValues({
-                groupName: '',
-                email: '',
-                description: '',
-                users: [],
-                profileImage: null,
-            });
-            setImagePreview(null);
-            setError(null);  // Limpiar errores
-        } catch (error) {
-            console.error('Error al crear el grupo:', error);
-            setError("Hubo un error al intentar crear el grupo. Intenta nuevamente.");
-        } finally {
-            setLoading(false);  // Terminar el estado de carga
-        }
-    }*/
-    
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        addGroup(formValues);
-        console.log('Group created:', formValues);
-        onClose();
-        setFormValues({ // Resetea los valores del formulario.
-            groupName: '',
-            users: [],
-            description: '',
-            profileImage: null
-        });
         
+        const token = sessionStorage.getItem('access-token');
+
+        // Crear un objeto con los valores del formulario
+        const newGroup = {
+        name: formValues.groupName,
+        description: formValues.description,
+        users: formValues.users,  // Se asume que 'users' ya está en el formato correcto
+        profileImage: formValues.profileImage
     };
 
-    //Agregar logica para mostrar en el form el array de usuarios registrados para la creacion del grupo
-    const usersList = [
-        {id: 1, name: 'Santiago'},
-        {id: 2, name: 'Facundo'},
-        {id: 3, name: 'User 3'},
-        {id: 4, name: 'User 4'}
-    ];
+    
+        try {
+            // Hacemos el POST al backend
+            const response = await fetch('http://localhost:4000/api/groups/create', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': token,
+                },
+                body: JSON.stringify(newGroup),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Grupo creado:', data);
+    
+                // Si el grupo se crea correctamente, cerramos el modal
+                onClose();
+                // Reseteamos el formulario
+                setFormValues({
+                    groupName: '',
+                    users: [],
+                    description: '',
+                    profileImage: null,
+                });
+                setImagePreview(null);
+            } else {
+                const data = await response.json();
+                console.error('Error al crear el grupo:', data.message);
+                alert('Hubo un error al crear el grupo. Intenta nuevamente.');
+            }
+        } catch (error) {
+            console.error('Error de red:', error);
+            alert('Hubo un error al intentar crear el grupo. Intenta nuevamente.');
+        }
+    };
 
 
     return (
@@ -244,11 +195,6 @@ function GroupForm({open, onClose}) {
                         onChange={handleChange}
                         renderValue={(selected) => selected.join(', ')}
                     >
-                        {usersList.map((user) => (
-                            <MenuItem key={user.id} value={user.name}>
-                                {user.name}
-                            </MenuItem>
-                        ))}
                     </Select>
                 </FormControl>
 
