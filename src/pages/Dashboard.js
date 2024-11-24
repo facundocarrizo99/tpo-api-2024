@@ -11,6 +11,8 @@ import {fetchData } from '../GroupBackend';
 import NavBarDashboard from "../components/NavBarDashboard";
 import ModificarPerfil from "../components/ModificarPerfil";
 
+//TODO fetch de la data de los grupos get grupos
+
 function Dashboard() {
     const userName = "Facundo"; // Nombre del usuario, puedes reemplazarlo por uno dinámico si lo prefieres
     const [budgets, setBudgets] = React.useState([]); // Estado para almacenar los presupuestos o grupos de gastos
@@ -27,24 +29,6 @@ function Dashboard() {
     // Función para cerrar el modal
     const handleCloseProfileModal = () => setOpenProfileModal(false);
 
-    /*async function fetchGroups(query, page, limit) {
-        const url = `/api/groups?query=${query}&page=${page}&limit=${limit}`;
-      
-        try {
-          const response = await fetch(url);
-      
-          // Verificamos si la respuesta fue exitosa (código 200-299)
-          if (!response.ok) {
-            throw new Error(`Error al obtener los grupos: ${response.statusText}`);
-          }
-      
-          // Convertimos la respuesta a JSON
-          const data = await response.json();
-          return data;  // Devuelve los datos de los grupos
-        } catch (error) {
-          console.error('Error en la solicitud:', error);
-        }
-      }*/
     
     
         // Simulación de la función fetchData que obtiene los grupos de gastos
