@@ -16,6 +16,11 @@ function NavBarDashboard  ({onProfileClick}) {
       navigate('/'); // Redirigir al inicio
   };
 
+  const name = sessionStorage.getItem('userName');
+  const nameParts = name.split(' ');
+  const firstName = nameParts[0];
+
+
     //Falta agregar imagen y nombre de usuario como prop. Falta agregar funcionalidad de las pestañas a los botones de perfil y proyectos//
 
   return (
@@ -29,7 +34,7 @@ function NavBarDashboard  ({onProfileClick}) {
 
         <div style={{ display: "flex", alignItems: "center"}}>
         <Typography variant="body1" style={{ color: "#F8F8F8", marginRight: 30}}>
-            Bienvenido, Juan
+            Bienvenido, {firstName}
           </Typography>
 
           <div style={{ display: "flex", alignItems: "center", cursor: "pointer", transition: "transform 0.3s ease", marginRight: 30}} onClick={onProfileClick} onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")} onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>

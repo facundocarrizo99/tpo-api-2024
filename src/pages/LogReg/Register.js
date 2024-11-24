@@ -5,10 +5,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
 import HttpsIcon from '@mui/icons-material/Https';
 import {useNavigate} from 'react-router-dom';
-import {users, findUser, createUser } from '../../backendLog';
 
 const Register = (registerUser) => {
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
@@ -18,31 +17,19 @@ const Register = (registerUser) => {
     return emailPattern.test(email);
   };
 
-  /*const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Verifica si el correo y nombre de usuario ya existen
-    const existingEmail = users.find((user) => user.email === email);
-    const existingUser = findUser(users, username);
+    if (!validateEmail(email)) {
+      alert('Por favor, ingresa un correo electrónico válido.');
+      return;
+    }
 
-    if (validateEmail(email)) {
-      if (existingEmail) {
-        console.error("El correo electrónico ya está en uso.");
-        alert("El correo electrónico ya está en uso.");
-        return;
-      }
-
-      if (existingUser) {
-        console.error("El nombre de usuario ya existe.");
-        alert("El nombre de usuario ya existe.");
-        return;
-      }
-
-      const newUser = { name: username, email, password };
+      const newUser = { name, email, password };
 
       try {
         // Llamada al backend para crear un usuario
-        const response = await fetch('http://localhost:5000/api/register', {
+        const response = await fetch('http://localhost:4000/api/users/registration', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -56,10 +43,6 @@ const Register = (registerUser) => {
           alert(`Error: ${errorData.message || 'Hubo un problema con el registro.'}`);
           return;
         }
-
-        // Si el registro es exitoso, guardar el token en sessionStorage
-        const data = await response.json();
-        sessionStorage.setItem("access-token", data.token);
         
         // Redirigir al login
         alert("Registro exitoso. Ya puedes iniciar sesión.");
@@ -68,41 +51,9 @@ const Register = (registerUser) => {
         console.error("Error durante el registro:", error);
         alert("Error al conectar con el servidor.");
       }
-    } else {
-      alert("Por favor, ingrese un correo electrónico válido.");
-    }
-  };*/
-
-
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const existingUser = findUser(users, username);
-    const existingEmail = users.find(user => user.email === email);
-
-    if (validateEmail(email)) {
-
-      if (existingEmail) {
-        console.error("El correo electrónico ya está en uso.");
-        alert("El correo electrónico ya está en uso.");
-        return;
-      }
-
-      if (existingUser) {
-        console.error("El nombre de usuario ya existe.");
-        alert("El nombre de usuario ya existe.");
-        return;
-      }
-
-      const newUser = { name: username, email, password };
-      createUser(newUser);
-      alert("Registro exitoso. Ya puedes iniciar sesion ");
-      navigate('/Login');
-    } else {
-      alert("Por favor, ingrese un correo electrónico válido.");
-    }
-  };
+    };
+    
+   
   
 
   return (
@@ -117,7 +68,7 @@ const Register = (registerUser) => {
       <div className= "inputs">
         <div className= "input">
           <AccountCircleIcon className= "Logo" style={{color: "#656565"}}/>
-          <input type= "text" placeholder= "Nombre de Usuario" value={username} onChange={(e) => setUsername(e.target.value)} required/>
+          <input type= "text" placeholder= "Nombre de Usuario" value={name} onChange={(e) => setName(e.target.value)} required/>
         </div>
         
         <div className= "input">

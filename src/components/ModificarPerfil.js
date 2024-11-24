@@ -1,31 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import imgPerfil from '../assets/perfil.png';
-//import axios from 'axios';  // Asegúrate de tener axios instalado
+import { AuthContext } from './AuthContext';
+import {useNavigate} from 'react-router-dom';
 
 //Falta agregar que la imagen de perfil se pasa como prop para que el nav bar la tenga//
+//TODO update del user y delete user
 
 function ModificarPerfil({open, onClose, userData}) {
+
+    const {logout} = useContext(AuthContext); // Obtener la función de inicio de sesión desde el contexto
+    const navigate = useNavigate();
 
     const [imagePreview, setImagePreview] = useState(imgPerfil); // Estado para la vista previa de la imagen
 
     // Estado para los datos del usuario, Falta pasar como prop los datos reales
     const [name, setName] = useState('');
-    const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [profileImage, setProfileImage] = useState(null);
 
-    // Efecto para cargar los datos del usuario cuando se abre el modal
+    //Obtener el user id al abrir el modal
+    const currentEmail = sessionStorage.getItem('email');
+    const currentName = sessionStorage.getItem('userName');
+    const userId = sessionStorage.getItem('user_id');
+    const token = sessionStorage.getItem('access-token');
+
     useEffect(() => {
-        if (open && userData) {
-            setName(userData.name);
-            setSurname(userData.surname);
-            setEmail(userData.email);
-            // No cargamos la contraseña por razones de seguridad
-            setImagePreview(userData.profileImage || '/default-profile.png'); // Establecer imagen de perfil
-        }
-    }, [open, userData]);
+        setEmail(currentEmail || ''); // Usa valores predeterminados si sessionStorage está vacío
+        setName(currentName || '');
+    }, [currentEmail, currentName]);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -38,44 +42,85 @@ function ModificarPerfil({open, onClose, userData}) {
         }
     };
 
-    //Funcion Update
-    /*const handleSave = async () => {
-        try {
-            const formData = new FormData();
-            formData.append('id', userData.id);
-            formData.append('name', name);
-            formData.append('surname', surname);
-            formData.append('email', email);
-            formData.append('password', password);
-            if (profileImage) {
-                formData.append('profileImage', profileImage);  // Agregar la imagen si se cambió
-            }
 
-            // Hacer la solicitud al backend para actualizar el usuario
-            const response = await axios.put('/api/users/update', formData, {
+
+    const handleUpdateProfile = async () => {
+        try {
+            // Crear el cuerpo de la solicitud con los datos actualizados
+            const requestBody = {
+                id: userId, // ID del usuario, necesario para identificar el registro
+                name: name || currentName, // Nuevo nombre o el valor actual
+                email: email || currentEmail, // Nuevo email o el valor actual
+                password: password || null, // Nueva contraseña si se proporciona
+            };
+    
+            // Realizar la solicitud PUT para actualizar los datos del usuario
+            const response = await fetch('http://localhost:4000/api/users/update', {
+                method: 'PUT',
                 headers: {
-                    'Content-Type': 'multipart/form-data',  // Importante cuando se envían archivos
+                    'Content-Type': 'application/json',
+                    'x-access-token': token, // Token de autorización
                 },
+                body: JSON.stringify(requestBody),
+            });
+    
+            // Verificar la respuesta del servidor
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Perfil actualizado:', result);
+                alert('Perfil actualizado exitosamente');
+                onClose(); // Cerrar el modal después de la actualización
+                // Opcional: Actualizar la sesión o redirigir al usuario si es necesario
+            } else {
+                const error = await response.json();
+                console.error('Error al actualizar el perfil:', error);
+                alert('Hubo un error al actualizar el perfil');
+            }
+        } catch (error) {
+            console.error('Error en la solicitud de actualización:', error);
+            alert('Hubo un error al actualizar el perfil');
+        }
+    };
+
+
+     // Función para eliminar el perfil FALTA AGREGRAR EL AUTHORIZATION
+    const handleDeleteProfile = async () => {
+        console.log(token);
+        try {
+            // Solicitud DELETE usando fetch
+            const response = await fetch('http://localhost:4000/api/users/delete', {
+                method: 'DELETE', // Método de eliminación
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-access-token': token 
+                },
+                body: JSON.stringify({ id: userId }), // Enviamos el ID en el cuerpo de la solicitud
             });
 
-            console.log('Usuario actualizado:', response.data);
-            onClose();  // Cerrar el modal después de guardar
-        } catch (error) {
-            console.error('Error al actualizar el perfil:', error);
-        }
-    };*/
 
-    /*const handleDeleteProfile = async () => {
-        if (window.confirm("¿Estás seguro de que quieres eliminar tu perfil? Esta acción no se puede deshacer.")) {
-            try {
-                const response = await axios.delete(`/api/users/delete/${userData.id}`);
-                console.log('Perfil eliminado:', response.data);
-                onClose();  // Cerrar el modal después de eliminar
-            } catch (error) {
+            // Verificar si la respuesta fue exitosa
+            if (response.ok) {
+                const result = await response.json();
+                console.log(result);  // Mostrar la respuesta en consola
+                alert('Perfil eliminado exitosamente');
+                onClose(); // Cerrar el modal después de eliminar
+                logout();
+                navigate('/');
+
+            } else {
+                const error = await response.json();
                 console.error('Error al eliminar el perfil:', error);
+                alert('Hubo un error al eliminar el perfil');
             }
+        } catch (error) {
+            console.error('Error en la solicitud de eliminación:', error);
+            alert('Hubo un error al eliminar el perfil');
         }
-    };*/
+    };
+
+
+
+
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -139,13 +184,6 @@ function ModificarPerfil({open, onClose, userData}) {
                     sx={{ mt: 2, width: '100%' }}
                 />
                 <TextField
-                    label="Apellido"
-                    variant="outlined"
-                    value={surname}
-                    onChange={(e) => setSurname(e.target.value)}
-                    sx={{ mt: 2, width: '100%' }}
-                />
-                <TextField
                     label="Email"
                     variant="outlined"
                     value={email}
@@ -156,7 +194,6 @@ function ModificarPerfil({open, onClose, userData}) {
                     label="Contraseña"
                     type="password"
                     variant="outlined"
-                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     sx={{ mt: 2, width: '100%' }}
                 />
@@ -165,7 +202,7 @@ function ModificarPerfil({open, onClose, userData}) {
 
                     {/* Botón para guardar cambios */}
                     <Button 
-                        onClick={onClose} 
+                        onClick={handleUpdateProfile} 
                         variant="contained" 
                         color="success" 
                         sx={{ mt: 2, marginRight: 1 , 
@@ -178,7 +215,7 @@ function ModificarPerfil({open, onClose, userData}) {
 
                     {/* Botón para eliminar perfil */}
                     <Button 
-                        onClick={onClose} 
+                        onClick={handleDeleteProfile} 
                         variant="contained"  
                         color="error"
                         sx={{ mt: 2, marginRight: 1 , color: "white",

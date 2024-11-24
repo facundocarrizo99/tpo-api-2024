@@ -3,7 +3,6 @@ import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import '../LogReg/LogReg.css'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HttpsIcon from '@mui/icons-material/Https';
-import {users, findUser } from '../../backendLog';
 import {useNavigate} from 'react-router-dom';
 import { AuthContext } from '../../components/AuthContext';
 
@@ -23,7 +22,7 @@ const Login = ({ searchUser}) => {
     setPassword(e.target.value);
   };
 
-  //Lo que en teoria deberia andar
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -31,7 +30,6 @@ const Login = ({ searchUser}) => {
     console.log('Email:', email);
     console.log('Password:', password);
   
-    
     const body = {
       email: email,
       password: password,
@@ -58,11 +56,22 @@ const Login = ({ searchUser}) => {
   
       // Parsear la respuesta del backend
       const data = await response.json();
-  
-      // Guardar el token en sessionStorage
-      console.log("Guardo el token en session storage");
-      sessionStorage.setItem("access-token", data.token);
-  
+      console.log('Respuesta JSON:', data);
+
+      const token = data.loginUser.token;
+      const userId = data.loginUser.user._id;
+      const email = data.loginUser.user.email;
+      const userName = data.loginUser.user.name;
+
+      // Guardar el token e ID del usuario en sessionStorage
+      sessionStorage.setItem('access-token', token);
+      sessionStorage.setItem('user_id', userId);
+      sessionStorage.setItem('email', email);
+      sessionStorage.setItem('userName', userName)
+      console.log('Token y User ID guardados en sessionStorage:', token, userId, email, userName);
+
+      login();
+      
       // Redirigir al usuario a la página principal
       navigate('/Home');
     } catch (error) {
@@ -71,24 +80,6 @@ const Login = ({ searchUser}) => {
     }
   };
 
-
-  /*const handleSubmit = (e) => {
-      e.preventDefault();
-      const user = findUser(users, email);
-      console.log("Usuario buscado:", user);
-
-      if (user) {
-        if (user.password === password) {
-          login(user);
-          navigate('/Home');
-        } else {
-          alert("Contraseña incorrecta.");
-        }
-      } else {
-        alert("Usuario no encontrado.");
-      }
-  };*/
-  
 
   return (
     <form onSubmit={handleSubmit} className= "container">
