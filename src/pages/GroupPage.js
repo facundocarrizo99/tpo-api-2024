@@ -1,4 +1,4 @@
-import {Container, List, Typography, Button, Box, ListItem} from "@mui/material";
+import {Container, List, Typography, Button, Box, ListItem, CircularProgress} from "@mui/material";
 import Footer from "../components/Footer/Footer";
 import React, {useState, useEffect} from "react";
 import {BasicSpeedDialAdd} from "../components/BasicSpeedDialAdd";
@@ -14,34 +14,39 @@ import ArregloItem from "../components/ArregloItem";
 function GroupPage() {
 
     const token = sessionStorage.getItem('access-token');
-    const actualGroup = JSON.parse(sessionStorage.getItem("actualGroup"));
-    const actualGroupId = actualGroup._id
-    
-    const [actualGroupF, setActualGroupFinal] = useState(null);
+    const [loading, setLoading] = useState(true); // Estado para manejar la carga de los datos
+    const [actualGroup, setActualGroup] = useState(false);
+
+    const actualGroupId = JSON.parse(sessionStorage.getItem("actualGroup"))._id;
     
 
     // Ejecutar la función fetchBudget cuando el componente se monte
     React.useEffect(() => {
         console.log('useEffect ejecutado, actualGroupId:', actualGroupId);
+
+
         const fetchBudget = async () => {
             try {
+
                 const response = await fetch('http://localhost:4000/api/groups/groupByID', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                         'x-access-token': token,
-                        
+                        'groupid': actualGroupId,
                     },
-                    body: JSON.stringify({groupid: actualGroupId})
                 });
+                console.log(response);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
+                setLoading(false); // Cambiar el estado de loading cuando los datos estén listos
                 console.log(data.data);
-                setActualGroupFinal(data.data);  // Almacenar los datos en el estado
+                setActualGroup(data.data);  // Almacenar los datos en el estado
                 //setLoading(false); // Cambiar el estado de loading cuando los datos estén listos
             } catch (error) {
+                setLoading(false); // Cambiar el estado de loading cuando los datos estén listos
                 console.error('Error fetching groups:', error);
                 //setLoading(false); // Cambiar el estado de loading cuando los datos estén listos
             }
@@ -134,6 +139,7 @@ function GroupPage() {
 
 
     return (
+        
         <div style={{backgroundColor: "#101010"}}>
             <NavBarDashboard/>
             <Container maxWidth="xl">
@@ -143,8 +149,14 @@ function GroupPage() {
                 <Typography variant="h3" color="#F8F8F8" marginBottom={1}>{groupName}</Typography>
                 <EditIcon sx={{ marginLeft: 1 ,cursor: "pointer", color: "#F8F8F8",'&:hover': { transform: 'scale(1.4)' }}} onClick={handleOpenModal}/>
             </Box>
-                
-                {expenses.length > 0 ? (
+
+            {loading ? (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+                        <CircularProgress color="secondary" />
+                    </Box>
+                ):(
+
+                expenses.length > 0 ? (
                     <Container maxWidth="xl">
 
                     <Typography variant="h4" style={{ color: '#F8F8F8', textAlign: 'start' }}>Resumen de Deudas</Typography>
@@ -175,7 +187,7 @@ function GroupPage() {
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                         <Box
                                             component="img"
-                                            src={imgPerfil} // Imagen por defecto si no hay foto
+                                            src={user.profilePicture || imgPerfil} // Imagen por defecto si no hay foto
                                             alt={`Foto de perfil de ${user.name}`}
                                             sx={{
                                                 width: 50,
@@ -244,6 +256,7 @@ function GroupPage() {
                             Apreta el botón de abajo y carga el primer gasto del grupo.
                         </Typography>
                     </Container>
+                )
                 )}
                         
                     <Box sx={{marginTop: 15, display: "flex", justifyContent: "center", position: "relative"}}>

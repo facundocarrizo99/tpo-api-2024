@@ -3,6 +3,7 @@ import {AppBar, Toolbar, Button, Typography, Avatar} from '@mui/material';
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import {useNavigate} from 'react-router-dom';
 import { AuthContext } from './AuthContext'; // Importar el contexto de autenticación
+import imgPerfil from '../assets/perfil.png';
 
 function NavBarDashboard  ({onProfileClick}) {
 
@@ -17,11 +18,12 @@ function NavBarDashboard  ({onProfileClick}) {
   };
 
   const name = sessionStorage.getItem('userName');
+  const profilePic = sessionStorage.getItem('userPic');
   const nameParts = name.split(' ');
   const firstName = nameParts[0];
 
 
-    //Falta agregar imagen y nombre de usuario como prop. Falta agregar funcionalidad de las pestañas a los botones de perfil y proyectos//
+  
 
   return (
     <AppBar position="static" color="transparent" elevation={0}>
@@ -41,10 +43,17 @@ function NavBarDashboard  ({onProfileClick}) {
             <Typography variant="body1" style={{ color: "#F8F8F8", marginRight: 10}}>
                 Mi Perfil
             </Typography>
-            <Avatar 
-                alt="Perfil" 
-                // Utiliza el parámetro pasado
-                style={{ width: 30, height: 30, marginRight: 8 }}/>
+            <img 
+              src={profilePic && profilePic !== "null" ? profilePic : imgPerfil} // Aquí pasa tu cadena Base64 como fuente
+              alt="Perfil" 
+            style={{
+            width: 30,
+            height: 30,
+            borderRadius: "50%", // Esto hace que sea redonda
+            marginRight: 8,
+            objectFit: "cover", // Para que la imagen se adapte bien al contenedor
+          }} 
+          />
           </div>
 
           <Button variant="contained" sx={{ backgroundColor: "#CC0F0F", color: "white", '&:hover': {transform: 'scale(1.1)', transition: 'transform 0.3s ease'}}} onClick={handleLogout}>

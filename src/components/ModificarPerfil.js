@@ -12,8 +12,6 @@ function ModificarPerfil({open, onClose, userData}) {
     const {logout} = useContext(AuthContext); // Obtener la función de inicio de sesión desde el contexto
     const navigate = useNavigate();
 
-    const [imagePreview, setImagePreview] = useState(imgPerfil); // Estado para la vista previa de la imagen
-
     // Estado para los datos del usuario, Falta pasar como prop los datos reales
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -25,6 +23,7 @@ function ModificarPerfil({open, onClose, userData}) {
     const currentName = sessionStorage.getItem('userName');
     const userId = sessionStorage.getItem('user_id');
     const token = sessionStorage.getItem('access-token');
+    const profilePic = sessionStorage.getItem('userPic');
 
     console.log(token)
 
@@ -33,14 +32,35 @@ function ModificarPerfil({open, onClose, userData}) {
         setName(currentName || '');
     }, [currentEmail, currentName]);
 
-    const handleImageChange = (event) => {
-        const file = event.target.files[0];
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImagePreview(reader.result); // Establecer la imagen de vista previa
+                const img = new Image();
+                img.src = reader.result;
+    
+                img.onload = () => {
+                    // Crear un canvas y redimensionar la imagen
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+    
+                    // Establecer las dimensiones del canvas a 200x200
+                    canvas.width = 200;
+                    canvas.height = 200;
+    
+                    // Dibujar la imagen redimensionada en el canvas
+                    ctx.drawImage(img, 0, 0, 200, 200);
+    
+                    // Obtener la imagen redimensionada en formato Base64
+                    const resizedImage = canvas.toDataURL('image/png');
+    
+                    // Guardar la imagen redimensionada en el estado
+                    setProfileImage(resizedImage);
+                    console.log(resizedImage); // Muestra la imagen redimensionada en la consola
+                };
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file); // Leer el archivo como una URL de datos
         }
     };
 
@@ -54,7 +74,7 @@ function ModificarPerfil({open, onClose, userData}) {
                 name: name || currentName, // Nuevo nombre o el valor actual
                 email: email || currentEmail, // Nuevo email o el valor actual
                 password: password, // Nueva contraseña si se proporciona
-                picture: "1234",
+                picture: profileImage,
             };
 
             console.log(requestBody);
@@ -124,9 +144,6 @@ function ModificarPerfil({open, onClose, userData}) {
     };
 
 
-
-
-
   return (
     <Modal open={open} onClose={onClose}>
             <Box
@@ -143,7 +160,7 @@ function ModificarPerfil({open, onClose, userData}) {
             >
                     <Box
                         component="img"
-                        src={imagePreview}
+                        src={ profileImage || (profilePic && profilePic !== "null" ? profilePic : imgPerfil) }
                         alt="Profile"
                         sx={{
                             width: '200px',

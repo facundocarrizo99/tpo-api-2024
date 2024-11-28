@@ -62,6 +62,7 @@ const Login = ({ searchUser}) => {
       const userId = data.loginUser.user._id;
       const email = data.loginUser.user.email;
       const userName = data.loginUser.user.name;
+      const userPicture = data.loginUser.user.profilePicture;
     
 
       // Guardar el token e ID del usuario en sessionStorage
@@ -69,7 +70,8 @@ const Login = ({ searchUser}) => {
       sessionStorage.setItem('user_id', userId);
       sessionStorage.setItem('email', email);
       sessionStorage.setItem('userName', userName);
-      console.log('Token y User ID guardados en sessionStorage:', token, userId, email, userName);
+      sessionStorage.setItem('userPic', userPicture);
+      console.log('Token y User ID guardados en sessionStorage:', token, userId, email, userName, userPicture);
 
       login();
       

@@ -50,6 +50,8 @@ function ExpenseItem({expense, users}) {
     // Encuentra el nombre del propietario del gasto
     const ownerName = users.find(participant => participant._id === owner)?.name || "Unknown";
 
+    const ownerPic = users.find(participant => participant._id === owner)?.profilePicture;
+
 
     // Encuentra los nombres de los receivers
     const receiverNames =  (receivers || []).map(receiverId  => {
@@ -119,7 +121,7 @@ function ExpenseItem({expense, users}) {
 
                 <Box
                     component="img"
-                    src={imgPerfilDefault} // Imagen por defecto si no hay foto
+                    src={ ownerPic|| imgPerfilDefault} // Imagen por defecto si no hay foto
                     alt={`Foto de perfil de ${ownerName}`}
                     sx={{
                         width: 40,

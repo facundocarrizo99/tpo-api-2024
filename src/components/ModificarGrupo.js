@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
-import imgGrupo from '../assets/grupo.png';
 import { useNavigate } from 'react-router';
 
 function ModificarGrupo({ open, onClose, groupData, onGroupUpdate, onGroupDelete }) {
@@ -13,7 +12,6 @@ function ModificarGrupo({ open, onClose, groupData, onGroupUpdate, onGroupDelete
   const actualDescription = actualGroup.description;
   const actualGroupId = actualGroup._id;
   
-  const [imagePreview, setImagePreview] = useState(imgGrupo); // Imagen por defecto
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
@@ -97,16 +95,6 @@ const handleDeleteGroup = async (groupId) => {
 };
 
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result); // Actualizar la vista previa
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -122,42 +110,6 @@ const handleDeleteGroup = async (groupId) => {
           alignItems: 'center',
         }}
       >
-        {/* Vista previa de la imagen */}
-        <Box
-          component="img"
-          src={imagePreview}
-          alt="Group"
-          sx={{
-            width: '200px',
-            height: '200px',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            transition: 'transform 0.2s',
-            '&:hover': {
-              transform: 'scale(1.1)', // Zoom al pasar el cursor
-            },
-          }}
-        />
-        <input
-          id="group-image-input"
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          style={{ display: 'none' }}
-        />
-        <Button
-          variant="contained"
-          color="success"
-          sx={{
-            mt: 2,
-            '&:hover': {
-              transform: 'scale(1.1)',
-            },
-          }}
-          onClick={() => document.getElementById('group-image-input').click()}
-        >
-          Cambiar Imagen
-        </Button>
 
         <Typography variant="h6" color="black" sx={{ mt: 2 }}>
           Modificar Grupo

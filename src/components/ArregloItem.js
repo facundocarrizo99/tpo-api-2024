@@ -39,6 +39,8 @@ function ArregloItem({arreglo, users}) {
     const payerName = users.find(participant => participant._id === payer)?.name || "Unknown";
     const receiverName = users.find(participant => participant._id === receiver)?.name || "Unknown";
 
+    const payerPic = users.find(participant => participant._id === payer)?.profilePicture;
+
     const handleDeleteArreglo = async () => {
 
         const token = sessionStorage.getItem('access-token');
@@ -97,7 +99,7 @@ function ArregloItem({arreglo, users}) {
             }>
                 <Box
                     component="img"
-                    src={imgPerfil} // Imagen por defecto si no hay foto
+                    src={payerPic || imgPerfil} // Imagen por defecto si no hay foto
                     alt={`Foto de perfil de `}
                     sx={{
                         width: 40,

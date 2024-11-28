@@ -1,32 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {TextField, Button, Box, Typography, MenuItem, Select, InputLabel, FormControl, Modal} from '@mui/material';
+import {TextField, Button, Box, Typography, FormControl, Modal, Chip} from '@mui/material';
 
 function GroupForm({open, onClose}) {
     const [formValues, setFormValues] = useState({
         groupName: '',
         users: [],
         description: '',
-        profileImage: null,
     });
 
+
     const [imagePreview, setImagePreview] = useState(); // Preview de la 
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setFormValues({
-            ...formValues,
-            profileImage: file,
-        });
-
-        // Crear un preview de la imagen seleccionada
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -36,6 +19,23 @@ function GroupForm({open, onClose}) {
         });
     };
 
+    const [emailInput, setEmailInput] = useState(''); // Almacena el correo actual ingresado
+
+    // Manejar el cambio en el campo de correo
+    const handleEmailChange = (e) => {
+        setEmailInput(e.target.value);
+    };
+
+    // Agregar el correo a la lista de usuarios
+    const handleAddEmail = () => {
+        if (emailInput.trim() && !formValues.users.includes(emailInput.trim())) {
+            setFormValues({
+                ...formValues,
+                users: [...formValues.users, emailInput.trim()],
+            });
+            setEmailInput(''); // Limpiar el campo de correo después de agregarlo
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -52,9 +52,10 @@ function GroupForm({open, onClose}) {
         const newGroup = {
         name: formValues.groupName,
         description: formValues.description,
-        users: formValues.users,  // Se asume que 'users' ya está en el formato correcto
-        profileImage: formValues.profileImage
+        participants: formValues.users,  // Se asume que 'users' ya está en el formato correcto
     };
+
+    console.log(newGroup);
 
     
         try {
@@ -116,52 +117,6 @@ function GroupForm({open, onClose}) {
                     Ingresa los datos de tu nuevo Grupo
                 </Typography>
 
-                <Box sx={{ my: 2 }}>
-                    {imagePreview ? (
-                        <Box
-                            component="img"
-                            src={imagePreview}
-                            alt="Profile"
-                            sx={{
-                                width: '200px',
-                                height: '200px',
-                                borderRadius: '50%',
-                                cursor: 'pointer',
-                                transition: 'transform 0.2s',
-                                '&:hover': {
-                                    transform: 'scale(1.1)', // Efecto de zoom al pasar el cursor
-                                },
-                            }}
-                        />
-                    ) : (
-                        <Typography variant="body1">
-                            No hay foto seleccionada
-                        </Typography>
-                    )}
-                    <input
-                        id="profile-image-input"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        style={{ display: 'none' }} // Ocultar el input
-                    />
-
-                    {/* Botón para subir la foto */}
-                    <Button
-                        variant="contained"
-                        color="success"
-                        sx={{
-                            mt: 2,
-                            '&:hover': {
-                                transform: 'scale(1.1)', // Efecto de zoom al pasar el cursor
-                            },
-                        }}
-                        onClick={() => document.getElementById('profile-image-input').click()}
-                    >
-                        Subir foto de grupo
-                    </Button>
-                </Box>
-
                 <TextField
                     label="Nombre del Grupo"
                     variant="outlined"
@@ -184,39 +139,35 @@ function GroupForm({open, onClose}) {
                     sx={{ mt: 2, width: '100%' }}
                 />
 
+                
                 <FormControl fullWidth margin="normal">
-                    <InputLabel id="users-label">Usuarios</InputLabel>
-                    <Select
-                        labelId="users-label"
+                    <TextField
                         id="users"
-                        name="users"
-                        multiple
-                        value={formValues.users}
-                        onChange={handleChange}
-                        renderValue={(selected) => selected.join(', ')}
-                    >
-                    </Select>
-                </FormControl>
+                        label="Correo de usuarios"
+                        variant="outlined"
+                        value={emailInput}
+                        onChange={handleEmailChange}
+                        helperText="Ingresa correos electrónicos de usuarios"
+                        fullWidth
+                    />
 
-                {/* Formulario para hacer un fetch de todos los usuarios de la base de datos
-                <FormControl fullWidth margin="normal">
-                    <InputLabel id="users-label">Usuarios</InputLabel>
-                    <Select
-                        labelId="users-label"
-                        id="users"
-                        name="users"
-                        multiple
-                        value={formValues.users}
-                        onChange={handleChange}
-                        renderValue={(selected) => selected.join(', ')}
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ mt: 2 }}
+                        onClick={handleAddEmail}
                     >
-                        {usersList.map((user) => (
-                            <MenuItem key={user._id} value={user.name}>
-                                {user.name}
-                            </MenuItem>
+                        Agregar correo
+                    </Button>
+
+                    <Box sx={{ marginTop: 2, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {formValues.users.map((email, index) => (
+                            <Chip key={index} label={email} />
                         ))}
-                    </Select>
-                </FormControl>*/}
+                    </Box>
+
+                </FormControl>
+            
 
                 <div style={{display: "flex", justifyContent: "space-between", marginTop: 20}}>
                     <Button
