@@ -26,6 +26,8 @@ function ModificarPerfil({open, onClose, userData}) {
     const userId = sessionStorage.getItem('user_id');
     const token = sessionStorage.getItem('access-token');
 
+    console.log(token)
+
     useEffect(() => {
         setEmail(currentEmail || ''); // Usa valores predeterminados si sessionStorage está vacío
         setName(currentName || '');
@@ -51,8 +53,11 @@ function ModificarPerfil({open, onClose, userData}) {
                 id: userId, // ID del usuario, necesario para identificar el registro
                 name: name || currentName, // Nuevo nombre o el valor actual
                 email: email || currentEmail, // Nuevo email o el valor actual
-                password: password || null, // Nueva contraseña si se proporciona
+                password: password, // Nueva contraseña si se proporciona
+                picture: "1234",
             };
+
+            console.log(requestBody);
     
             // Realizar la solicitud PUT para actualizar los datos del usuario
             const response = await fetch('http://localhost:4000/api/users/update', {

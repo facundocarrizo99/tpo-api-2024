@@ -1,20 +1,30 @@
 import React, {useState} from "react";
-import {Box, Button, FormControl, InputLabel, List, MenuItem, Select, TextField, Typography} from "@mui/material";
-import {addArreglo} from "../GroupBackend";
-import ticket from '../assets/ticket.png';
+import {Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
+import { useNavigate } from 'react-router';
+ 
 
 
-function ArregloForm({users, selectedGroup, onClose}) {
+function ArregloForm({onClose}) {
+
+    const navigate = useNavigate();
+
+    const actualGroup = JSON.parse(sessionStorage.getItem('actualGroup'));
+    const groupId = actualGroup._id;
+    const groupName = actualGroup.name;
+    const users = actualGroup ? actualGroup.participants : []; 
+    const user_id = sessionStorage.getItem('user_id');
+    const token = sessionStorage.getItem('access-token');
+    const currentEmail = sessionStorage.getItem('email');
+    const currentName = sessionStorage.getItem('userName');
+
+
     const [formArregloValues, setFormArregloValues] = useState({
-        groupName: '',
-        payer: [],
-        receiver: [],
+        name: '',
+        payer: '',
+        receiver: '',
         description: '',
         amount: 0,
-        ticketImage: null,
     });
-
-    const [ticketImage, setTicketImage] = useState(null); // Estado para almacenar la imagen
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -24,25 +34,57 @@ function ArregloForm({users, selectedGroup, onClose}) {
         });
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setTicketImage(reader.result); // Guardar la imagen en el estado
-            };
-            reader.readAsDataURL(file); // Leer el archivo como una URL de datos
-        }
-    };
-
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        addArreglo(selectedGroup, formArregloValues);
-        console.log('Arreglo created:', formArregloValues);
-        onClose();
-    };
+    
+        const { name, receiver, description, amount } = formArregloValues;
+    
+        // Validación simple para asegurarse de que todos los campos estén completos
+        if (!receiver || !name  || !description || amount <= 0) {
+          alert("Por favor, completa todos los campos.");
+          return;
+        }
 
+        const receiverEmail = users.find((user) => user.name === formArregloValues.receiver)?.email || null;
+    
+        try {
+          // Llamada al backend para agregar el gasto
+          const arregloData = { 
+            name: name, 
+            description: description, 
+            payer: currentEmail, 
+            receiver: receiverEmail, 
+            amount: amount,  
+        }; 
+          
+          console.log("Datos que se enviarán al backend:", JSON.stringify(arregloData, null, 2));
+
+          const response = await fetch('http://localhost:4000/api/groups/createArreglo', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-access-token': token, // Token de autorización
+              'groupid': groupId,
+            },
+            body: JSON.stringify(arregloData),
+          });
+    
+          // Manejo de la respuesta del backend
+          if (!response.ok) {
+            const errorData = await response.json();
+            alert(`Error: ${errorData.message || 'Hubo un problema al agregar el arreglo.'}`);
+            return;
+          }
+    
+          alert("Arreglo agregado exitosamente");
+          // Redirigir a la página de grupo después de agregar el gasto
+          onClose();
+          navigate(`/group/${groupName}`)
+        } catch (error) {
+          console.error("Error al agregar el arreglo:", error);
+          alert("Error al conectar con el servidor.");
+        }
+      };
 
     return (
         <Box
@@ -69,47 +111,20 @@ function ArregloForm({users, selectedGroup, onClose}) {
             <Typography variant="h5" component="h1" gutterBottom align={"center"} color="#101010">
                 Crear nuevo Arreglo
             </Typography>
-
-                    <Box
-                        component="img"
-                        src={ticketImage || ticket}
-                        alt="ticket"
-                        sx={{
-                            width: '200px',
-                            height: '200px',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            transition: 'transform 0.2s',
-                            '&:hover': {
-                                transform: 'scale(1.1)', // Efecto de zoom al pasar el cursor
-                            },
-                        }}
-                    />
-                    <input
-                        id="profile-image-input"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange} // Manejar el cambio de imagen
-                        style={{ display: 'none' }} // Ocultar el input
-                    />
-
-                    {/* Botón para subir la foto */}
-                <Button 
-                    variant="contained" 
-                    color="success" 
-                    sx={{ mt: 2,
-                    '&:hover': {
-                                transform: 'scale(1.1)', // Efecto de zoom al pasar el cursor
-                            } }} 
-                    onClick={() => document.getElementById('profile-image-input').click()}
-                    
-                >
-                    Subir Ticket
-                </Button>
-
-
-
             
+                    <TextField
+                        label="Name"
+                        variant="outlined"
+                        name="name"
+                        fullWidth={true}
+                        value={formArregloValues.name}
+                        onChange={handleChange}
+                        multiline
+                        rows={1}
+                        required
+                        sx={{ mt: 2, width: '100%' }}
+                    />
+                    
                     <TextField
                         label="Descripcion"
                         variant="outlined"
@@ -123,7 +138,6 @@ function ArregloForm({users, selectedGroup, onClose}) {
                         sx={{ mt: 2, width: '100%' }}
                     />
                 
-                
                     <TextField
                         label="Monto"
                         variant="outlined"
@@ -136,27 +150,6 @@ function ArregloForm({users, selectedGroup, onClose}) {
                         sx={{ mt: 2, width: '100%' }}
                     />
                
-                
-                    <FormControl fullWidth margin="normal">
-                        <InputLabel id="payer-select-label">Persona que Paga</InputLabel>
-                        <Select
-                            labelId="payer-select-label"
-                            id="payer"
-                            name="payer"
-                            single
-                            value={formArregloValues.payer}
-                            onChange={handleChange}
-                            sx={{ mt: 2, width: '100%' }}
-                        >
-                            {users.map((user) => (
-                                <MenuItem key={user.id} value={user.name}>
-                                    {user.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-               
-              
                     <FormControl fullWidth margin="normal">
                         <InputLabel id="receiver-select-label">Persona que Recibe</InputLabel>
                         <Select
@@ -168,10 +161,12 @@ function ArregloForm({users, selectedGroup, onClose}) {
                             onChange={handleChange}
                             sx={{ mt: 2, width: '100%' }}
                         >
-                            {users.map((user) => (
-                                <MenuItem key={user.id} value={user.name}>
-                                    {user.name}
-                                </MenuItem>
+                            {users
+                                .filter(user => user.name !== currentName) 
+                                .map((user) => (
+                                    <MenuItem key={user.id} value={user.name}>
+                                        {user.name}
+                                    </MenuItem>
                             ))}
                         </Select>
                     </FormControl>

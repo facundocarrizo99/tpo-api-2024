@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import {AppBar, Toolbar, Button, Container, Grid, Card, CardContent, Typography, ButtonGroup, Avatar} from '@mui/material';
+import {AppBar, Toolbar, Button, Typography, Avatar} from '@mui/material';
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import {useNavigate} from 'react-router-dom';
 import { AuthContext } from './AuthContext'; // Importar el contexto de autenticación

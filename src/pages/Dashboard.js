@@ -1,7 +1,7 @@
 import AddGroupForm from "../components/AddGroupForm";
-import {Container, Typography, Button, Box} from "@mui/material";
+import {Container, Typography, Button, Box, CircularProgress} from "@mui/material";
 import GroupItem from "../components/GroupItem";
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import Footer from "../components/Footer/Footer";
 import Grid from '@mui/material/Grid2';
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
@@ -16,6 +16,7 @@ function Dashboard() {
     const [budgets, setBudgets] = React.useState([]); // Estado para almacenar los presupuestos o grupos de gastos
     const [openNewGroup, setOpen] = React.useState(false); // Estado para manejar el modal del grupo
     const [openProfileModal, setOpenProfileModal] = useState(false); // Estado para manejar el modal de perfil
+    const [loading, setLoading] = useState(true); // Estado para manejar la carga de los datos
 
 
     const userId = sessionStorage.getItem('user_id');
@@ -23,6 +24,7 @@ function Dashboard() {
     const name = sessionStorage.getItem('userName');
     const nameParts = name.split(' ');
     const firstName = nameParts[0];
+
 
 
     // Función para abrir el modal
@@ -33,6 +35,7 @@ function Dashboard() {
     const handleOpenProfileModal = () => setOpenProfileModal(true);
     // Función para cerrar el modal
     const handleCloseProfileModal = () => setOpenProfileModal(false);
+
 
     
     React.useEffect(() => {
@@ -51,8 +54,10 @@ function Dashboard() {
                 }
                 const data = await response.json();
                 setBudgets(data.data); // Suponiendo que los grupos están en data.data según tu controlador
+                setLoading(false); // Cambiar el estado de loading cuando los datos estén listos
             } catch (error) {
                 console.error('Error fetching groups:', error);
+                setLoading(false); // Cambiar el estado de loading cuando los datos estén listos
             }
         };
         fetchBudgets();
@@ -67,7 +72,13 @@ function Dashboard() {
 
             <Container maxWidth="xl">
                 <Typography variant="h3" color="#F8F8F8">Mis Grupos</Typography>
-                {budgets && budgets.length > 0 ? (
+
+                {loading ? (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+                        <CircularProgress color="secondary" />
+                    </Box>
+                ):(
+                budgets && budgets.length > 0 ? (
                     <Container maxWidth="xl">
                         <Typography variant="h4" color="#F8F8F8" marginTop={5} marginBottom={5}>Desde esta ventana puedes gestionar tus Grupos!</Typography>
                         <Grid container spacing={{xs: 2, md: 8}} columns={{xs: 4, sm: 8, md: 12}}>
@@ -77,7 +88,7 @@ function Dashboard() {
                             return(  
                                 <Grid key={budget.name} size={{xs: 2, sm: 4, md: 4}}>
                                     {/* Envolver GroupItem en un enlace que redirige a la página del grupo */}
-                                    <Link to={`/group/${budget.name}`} style={{textDecoration: 'none'}}>
+                                    <Link to={`/group/${budget.name}`} style={{textDecoration: 'none'}} onClick={sessionStorage.setItem('actualBudget', JSON.stringify(budget))}>
                                         <GroupItem budget={budget}/>
                                     </Link>
                                 </Grid>
@@ -95,6 +106,7 @@ function Dashboard() {
                             Apreta el botón de abajo y crea tu primer grupo de gastos.
                         </Typography>
                     </Container>
+                )
                 )}
                 <Box sx={{marginTop:5, marginLeft: 100, textAlign: "center"}}>
                     <Button variant="contained" color="success" endIcon={<AssuredWorkloadIcon/>}
