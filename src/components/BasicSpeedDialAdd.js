@@ -33,13 +33,13 @@ export function BasicSpeedDialAdd({refreshData}) {
                 <SpeedDialAction
                     key='Agregar un Gasto'
                     icon={<AddIcon/>}
-                    tooltipTitle='Agregar un Gasto'
+                    tooltipTitle='Crear un Gasto'
                     onClick={handleOpenAddExpenseForm}
                 />
                 <SpeedDialAction
                     key='Arreglar gastos'
                     icon={<HandshakeIcon/>}
-                    tooltipTitle='Arreglar gastos'
+                    tooltipTitle='Crear un Arreglo'
                     onClick={handleOpenAddArregloForm}
                 />
             </SpeedDial>

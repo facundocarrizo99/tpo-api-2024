@@ -5,11 +5,15 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
 import HttpsIcon from '@mui/icons-material/Https';
 import {useNavigate} from 'react-router-dom';
+import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 
 const Register = (registerUser) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // Nuevo estado
   const [email, setEmail] = useState("");
+  const [safetyAnswer, setSafetyAnswer] = useState(""); // Estado para la pregunta de seguridad
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -17,15 +21,31 @@ const Register = (registerUser) => {
     return emailPattern.test(email);
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Cerrar modal y ejecutar el registro
+    handleSubmit();
+  };
+
+  const handleCancelModal = () => {
+    setIsModalOpen(false); // Cierra el modal al hacer clic en "Cancelar"
+  };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     if (!validateEmail(email)) {
       alert('Por favor, ingresa un correo electrónico válido.');
       return;
     }
 
-      const newUser = { name, email, password };
+    if (password !== confirmPassword) { // Validación de contraseñas
+      alert('Las contraseñas no coinciden. Por favor, inténtalo de nuevo.');
+      return;
+    }
+
+
+      const newUser = { name, email, password, safetyAnswer };
+      console.log(newUser);
 
       try {
         // Llamada al backend para crear un usuario
@@ -43,6 +63,7 @@ const Register = (registerUser) => {
           alert(`Error: ${errorData.message || 'Hubo un problema con el registro.'}`);
           return;
         }
+        console.log(response)
         
         // Redirigir al login
         alert("Registro exitoso. Ya puedes iniciar sesión.");
@@ -54,8 +75,6 @@ const Register = (registerUser) => {
     };
     
    
-  
-
   return (
     <div className= "container">
 
@@ -73,7 +92,7 @@ const Register = (registerUser) => {
         
         <div className= "input">
           <EmailIcon className= "Logo" style={{color: "#656565"}}/>
-          <input type= "email" placeholder= "Mail" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+          <input type= "email" placeholder= "Email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
         </div>
 
         <div className= "input">
@@ -81,14 +100,68 @@ const Register = (registerUser) => {
           <input type= "password" placeholder= "Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required/>
         </div>
 
+        <div className= "input">
+          <HttpsIcon className= "Logo" style={{color: "#656565"}}/>
+          <input type= "password" placeholder= "Repita la contraseña" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required/>
+        </div>
+
       </div>
       
       <div className= "submit-container">
-        <div className="submit" onClick={handleSubmit}>Registrarse</div>
+        <div className="submit" onClick={setIsModalOpen}>Registrarse</div>
         <div className="submit gray" onClick={() => navigate('/Login')}>Ingresar</div>
       </div>
 
+      {/* Modal para la pregunta de seguridad */}
+      <Modal open={isModalOpen} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            borderRadius: '8px',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+            Pregunta de Seguridad
+          </Typography>
+          <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+            ¿Cual es el nombre de tu mascota?
+          </Typography>
+          <TextField
+            fullWidth
+            label="Respuesta"
+            variant="outlined"
+            value={safetyAnswer}
+            onChange={(e) => setSafetyAnswer(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ mt: 2 }}
+            onClick={handleCloseModal}
+          >
+            Confirmar
+          </Button>
+
+          <Button
+          variant="outlined"
+          color="error"
+          sx={{ mt: 2, ml: 2 }}
+          onClick={handleCancelModal} // Cierra el modal sin ejecutar la acción
+        >
+          Cancelar
+        </Button>
+        </Box>
+      </Modal>
+
     </div>
+
   )
 }
 

@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom';
 //Falta agregar que la imagen de perfil se pasa como prop para que el nav bar la tenga//
 //TODO update del user y delete user
 
-function ModificarPerfil({open, onClose, userData, refreshData}) {
+function ModificarPerfil({open, onClose, userData}) {
 
     const {logout} = useContext(AuthContext); // Obtener la función de inicio de sesión desde el contexto
     const navigate = useNavigate();
@@ -17,6 +17,7 @@ function ModificarPerfil({open, onClose, userData, refreshData}) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [profileImage, setProfileImage] = useState(null);
+    const [safetyAnswer, setSafetyAnswer] = useState(""); // Estado para la pregunta de seguridad
 
     //Obtener el user id al abrir el modal
     const currentEmail = sessionStorage.getItem('email');
@@ -24,13 +25,15 @@ function ModificarPerfil({open, onClose, userData, refreshData}) {
     const userId = sessionStorage.getItem('user_id');
     const token = sessionStorage.getItem('access-token');
     const profilePic = sessionStorage.getItem('userPic');
+    const safetyResponse = sessionStorage.getItem('safetyAnswer');
 
     console.log(token)
 
     useEffect(() => {
         setEmail(currentEmail || ''); // Usa valores predeterminados si sessionStorage está vacío
         setName(currentName || '');
-    }, [currentEmail, currentName]);
+        setSafetyAnswer(safetyResponse || '');
+    }, [currentEmail, currentName, safetyResponse]);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -75,6 +78,7 @@ function ModificarPerfil({open, onClose, userData, refreshData}) {
                 email: email || currentEmail, // Nuevo email o el valor actual
                 password: password, // Nueva contraseña si se proporciona
                 picture: profileImage,
+                safetyAnswer: safetyAnswer || safetyResponse
             };
 
             console.log(requestBody);
@@ -94,10 +98,12 @@ function ModificarPerfil({open, onClose, userData, refreshData}) {
                 const result = await response.json();
                 console.log('Perfil actualizado:', result);
                 alert('Perfil actualizado exitosamente');
+                sessionStorage.setItem('email', result.data.email);
+                sessionStorage.setItem('userName', result.data.name);
+                sessionStorage.setItem('userPic', result.data.profilePicture);
+                sessionStorage.setItem('safetyAnswer', result.data.safetyAnswer);
+
                 onClose(); // Cerrar el modal después de la actualización
-                if (typeof refreshData === "function") {
-                    refreshData(); // Llama a fetchBudget para recargar datos
-                }
                 // Opcional: Actualizar la sesión o redirigir al usuario si es necesario
             } else {
                 const error = await response.json();
@@ -216,10 +222,19 @@ function ModificarPerfil({open, onClose, userData, refreshData}) {
                     sx={{ mt: 2, width: '100%' }}
                 />
                 <TextField
-                    label="Contraseña"
-                    type="password"
+                    label="Nueva Contraseña o Ingrese Actual"
                     variant="outlined"
                     onChange={(e) => setPassword(e.target.value)}
+                    sx={{ mt: 2, width: '100%' }}
+                />
+
+                <Typography variant="h6" color="black" sx={{ mt: 2 }}>¿Cual es el nombre de tu mascota?</Typography>
+
+                <TextField
+                    label="Respuesta de seguridad"
+                    variant="outlined"
+                    value={safetyAnswer}
+                    onChange={(e) => setSafetyAnswer(e.target.value)}
                     sx={{ mt: 2, width: '100%' }}
                 />
 
