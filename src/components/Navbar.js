@@ -19,16 +19,22 @@ function Navbar() {
                                      variant="contained"
                                      aria-label="Disabled button group"
                                      color="">
-                            <Button style={{color: "#F8F8F8"}}>Inicio</Button>
-                            <Button style={{color: "#F8F8F8"}}>Contacto</Button>
-                            <Button style={{color: "#F8F8F8"}}>Ayuda</Button>
+                            <Button style={{color: "#F8F8F8"}} onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"} 
+  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>Inicio</Button>
+                            <Button style={{color: "#F8F8F8"}} href="https://facundocarrizo.notion.site/TP-Documentacion-1476583c45b480c49225efc4b7f8fa9e" target="_blank" rel="noopener noreferrer" onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"} 
+  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>Contacto</Button>
+                            <Button style={{color: "#F8F8F8"}} href="https://facundocarrizo.notion.site/TP-Documentacion-1476583c45b480c49225efc4b7f8fa9e" target="_blank" rel="noopener noreferrer" onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"} 
+  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>Ayuda</Button>
                         </ButtonGroup>
                     </Toolbar>
 
                     <Toolbar lastChild={true} float="right">
-                        <Button style={{color: "#F8F8F8"}}><InstagramIcon/></Button>
-                        <Button style={{color: "#F8F8F8"}}><FacebookIcon/></Button>
-                        <Button style={{color: "#F8F8F8"}}><XIcon/></Button>
+                        <Button style={{color: "#F8F8F8"}} href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"} 
+  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}><InstagramIcon/></Button>
+                        <Button style={{color: "#F8F8F8"}} href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"} 
+  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}><FacebookIcon/></Button>
+                        <Button style={{color: "#F8F8F8"}} href="https://www.x.com" target="_blank" rel="noopener noreferrer" onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"} 
+  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}><XIcon/></Button>
                     </Toolbar>
 
                 </Toolbar>

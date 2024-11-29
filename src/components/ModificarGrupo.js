@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import { useNavigate } from 'react-router';
 
-function ModificarGrupo({ open, onClose, groupData, onGroupUpdate, onGroupDelete }) {
+function ModificarGrupo({ open, onClose, groupData, onGroupUpdate, onGroupDelete, refreshData }) {
 
   const navigate = useNavigate();
   
@@ -53,6 +53,7 @@ function ModificarGrupo({ open, onClose, groupData, onGroupUpdate, onGroupDelete
             alert('Grupo actualizado exitosamente');
             onClose(); // Cerrar el modal después de la actualización
             navigate('/Home');
+            
         } else {
             const error = await response.json();
             console.error('Error al actualizar el grupo:', error);
@@ -83,6 +84,7 @@ const handleDeleteGroup = async (groupId) => {
           alert('Grupo eliminado exitosamente');
           onClose(); // Cerrar el modal después de la eliminación
           navigate('/Home');
+        
       } else {
           const error = await response.json();
           console.error('Error al eliminar el grupo:', error);

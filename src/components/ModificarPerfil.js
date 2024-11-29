@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom';
 //Falta agregar que la imagen de perfil se pasa como prop para que el nav bar la tenga//
 //TODO update del user y delete user
 
-function ModificarPerfil({open, onClose, userData}) {
+function ModificarPerfil({open, onClose, userData, refreshData}) {
 
     const {logout} = useContext(AuthContext); // Obtener la función de inicio de sesión desde el contexto
     const navigate = useNavigate();
@@ -95,6 +95,9 @@ function ModificarPerfil({open, onClose, userData}) {
                 console.log('Perfil actualizado:', result);
                 alert('Perfil actualizado exitosamente');
                 onClose(); // Cerrar el modal después de la actualización
+                if (typeof refreshData === "function") {
+                    refreshData(); // Llama a fetchBudget para recargar datos
+                }
                 // Opcional: Actualizar la sesión o redirigir al usuario si es necesario
             } else {
                 const error = await response.json();

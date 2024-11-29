@@ -21,7 +21,7 @@ function formatCustomDate(isoDate) {
     return `${formattedDate} - ${hours}:${minutes}${period}`;
 }
 
-function ExpenseItem({expense, users}) {
+function ExpenseItem({expense, users, refreshData}) {
     const [openDialog, setOpenDialog] = React.useState(false);
 
     const handleCameraClick = () => {
@@ -82,6 +82,9 @@ function ExpenseItem({expense, users}) {
                 const result = await response.json();
                 console.log(result);  // Mostrar la respuesta en consola
                 alert('Gasto eliminado exitosamente');
+                if (typeof refreshData === "function") {
+                    refreshData(); // Llama a fetchBudget para recargar datos
+                }
             
 
             } else {

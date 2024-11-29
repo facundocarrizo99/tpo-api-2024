@@ -21,7 +21,6 @@ function GroupPage() {
     
 
     // Ejecutar la función fetchBudget cuando el componente se monte
-    React.useEffect(() => {
         console.log('useEffect ejecutado, actualGroupId:', actualGroupId);
 
 
@@ -51,8 +50,11 @@ function GroupPage() {
                 //setLoading(false); // Cambiar el estado de loading cuando los datos estén listos
             }
         };
+         
+
+    React.useEffect(() => {
         fetchBudget();
-    }, []);  
+    }, []);
 
     const groupName = actualGroup.name;
     const expenses = actualGroup ? actualGroup.expenses : []; // Usamos expenses desde actualGroup
@@ -139,6 +141,7 @@ function GroupPage() {
 
 
     return (
+        
         
         <div style={{backgroundColor: "#101010"}}>
             <NavBarDashboard/>
@@ -235,7 +238,7 @@ function GroupPage() {
                                     Resumen de Gastos</Typography>
                         <List>
                             {expenses?.map((expense) => (
-                                <ExpenseItem key={expense._id} expense={expense} users={users}/>
+                                <ExpenseItem key={expense._id} expense={expense} users={users} refreshData={fetchBudget}/>
                             ))}
                         </List>
 
@@ -243,7 +246,7 @@ function GroupPage() {
                                     Resumen de Arreglos</Typography>
                         <List>
                             {arreglos?.map((arreglo) => (
-                                <ArregloItem key={arreglo._id} arreglo={arreglo} users={users} />
+                                <ArregloItem key={arreglo._id} arreglo={arreglo} users={users} refreshData={fetchBudget} />
                             ))}
                         </List>
 
@@ -261,11 +264,11 @@ function GroupPage() {
                         
                     <Box sx={{marginTop: 15, display: "flex", justifyContent: "center", position: "relative"}}>
                         <Box sx={{ position: "absolute", display: "flex", justifyContent: "space-around", right: 20, bottom: 20 }}>
-                            <BasicSpeedDialAdd/>                      
+                            <BasicSpeedDialAdd refreshData={fetchBudget}/>                      
                         </Box>
                         <Button variant="contained" color="error" onClick={handleBackToGroups} sx={{color: "white", '&:hover': { transform: 'scale(1.1)', }}}>Volver a tus Grupos</Button>
                     </Box>
-
+                
             </Container>
 
             <ModificarGrupo

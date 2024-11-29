@@ -19,7 +19,7 @@ function formatCustomDate(isoDate) {
     return `${formattedDate} - ${hours}:${minutes}${period}`;
 }
 
-function ArregloItem({arreglo, users}) {
+function ArregloItem({arreglo, users, refreshData}) {
 
     const token = sessionStorage.getItem('access-token');
     const actualGroup = JSON.parse(sessionStorage.getItem('actualGroup'));
@@ -66,6 +66,9 @@ function ArregloItem({arreglo, users}) {
                 const result = await response.json();
                 console.log(result);  // Mostrar la respuesta en consola
                 alert('Arreglo eliminado exitosamente');
+                if (typeof refreshData === "function") {
+                    refreshData(); // Llama a fetchBudget para recargar datos
+                }
             } else {
                 const error = await response.json();
                 console.error('Error al eliminar el arreglo:', error);

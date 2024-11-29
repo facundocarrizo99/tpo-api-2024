@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, onSuccess} from 'react';
 import {TextField, Button, Typography, FormControl, FormGroup, FormControlLabel, Checkbox, Box} from '@mui/material';
 import ticket from '../assets/ticket.png';
 import { useNavigate } from 'react-router';
 
-function AddExpenseForm({onClose}) {
+function AddExpenseForm({onClose, refreshData}) {
 
     const navigate = useNavigate();
 
@@ -144,7 +144,9 @@ function AddExpenseForm({onClose}) {
           alert("Gasto agregado exitosamente");
           // Redirigir a la página de grupo después de agregar el gasto
           onClose();
-          navigate(`/group/${groupName}`);
+          if (typeof refreshData === "function") {
+            refreshData(); // Llama a fetchBudget para recargar datos
+        }
         } catch (error) {
           console.error("Error al agregar el gasto:", error);
           alert("Error al conectar con el servidor.");

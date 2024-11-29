@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
  
 
 
-function ArregloForm({onClose}) {
+function ArregloForm({onClose, refreshData}) {
 
     const navigate = useNavigate();
 
@@ -79,7 +79,9 @@ function ArregloForm({onClose}) {
           alert("Arreglo agregado exitosamente");
           // Redirigir a la página de grupo después de agregar el gasto
           onClose();
-          navigate(`/group/${groupName}`)
+          if (typeof refreshData === "function") {
+            refreshData(); // Llama a fetchBudget para recargar datos
+        }
         } catch (error) {
           console.error("Error al agregar el arreglo:", error);
           alert("Error al conectar con el servidor.");

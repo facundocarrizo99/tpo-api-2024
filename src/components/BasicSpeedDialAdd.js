@@ -12,7 +12,7 @@ import {useParams} from "react-router-dom";
 import {findGroupByName} from "../GroupBackend";
 
 
-export function BasicSpeedDialAdd({}) {
+export function BasicSpeedDialAdd({refreshData}) {
     const [openExpenseForm, setOpenExpenseForm] = React.useState(false);
     const [openArregloForm, setOpenArregloForm] = React.useState(false);
     const handleOpenAddExpenseForm = () => setOpenExpenseForm(true);
@@ -49,7 +49,7 @@ export function BasicSpeedDialAdd({}) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <AddExpenseForm users={users} selectedGroup={groupName} onClose={handleCloseExpenseForm}/>
+                <AddExpenseForm users={users} selectedGroup={groupName} onClose={handleCloseExpenseForm} refreshData={refreshData}/>
             </Modal>
             <Modal
                 open={openArregloForm}
@@ -57,7 +57,7 @@ export function BasicSpeedDialAdd({}) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <AddArregloForm users={users} selectedGroup={groupName} onClose={handleCloseArregloForm}/>
+                <AddArregloForm users={users} selectedGroup={groupName} onClose={handleCloseArregloForm} refreshData={refreshData}/>
             </Modal>
         </Box>
     );

@@ -37,8 +37,6 @@ function Dashboard() {
     const handleCloseProfileModal = () => setOpenProfileModal(false);
 
 
-    
-    React.useEffect(() => {
         const fetchBudgets = async () => {
             try {
                 const response = await fetch('http://localhost:4000/api/groups/myGroups', {
@@ -60,6 +58,9 @@ function Dashboard() {
                 setLoading(false); // Cambiar el estado de loading cuando los datos estén listos
             }
         };
+      
+
+    React.useEffect(() => {
         fetchBudgets();
     }, []);
     
@@ -115,11 +116,11 @@ function Dashboard() {
                     </Button>
                 </Box>
                     <Modal open={openNewGroup} onClose={handleNewGroupClose}>
-                        <AddGroupForm open={openNewGroup} onClose={handleNewGroupClose}/>
+                        <AddGroupForm open={openNewGroup} onClose={handleNewGroupClose} refreshData={fetchBudgets}/>
                     </Modal>
 
                     <Modal open={openProfileModal} onClose={handleCloseProfileModal}>
-                        <ModificarPerfil open={openProfileModal} onClose={handleCloseProfileModal} />
+                        <ModificarPerfil open={openProfileModal} onClose={handleCloseProfileModal} refreshData={fetchBudgets}/>
                     </Modal>
                 
             </Container>

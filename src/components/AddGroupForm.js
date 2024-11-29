@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {TextField, Button, Box, Typography, FormControl, Modal, Chip} from '@mui/material';
 
-function GroupForm({open, onClose}) {
+function GroupForm({open, onClose, refreshData}) {
     const [formValues, setFormValues] = useState({
         groupName: '',
         users: [],
@@ -75,6 +75,9 @@ function GroupForm({open, onClose}) {
     
                 // Si el grupo se crea correctamente, cerramos el modal
                 onClose();
+                if (typeof refreshData === "function") {
+                    refreshData(); // Llama a fetchBudget para recargar datos
+                }
                 // Reseteamos el formulario
                 setFormValues({
                     groupName: '',
